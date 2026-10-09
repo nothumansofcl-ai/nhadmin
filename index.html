@@ -1,0 +1,3257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<title>Admin — NOT HUMANS</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+button,a,div,span,img,input,textarea,select,label{outline:none;-webkit-tap-highlight-color:transparent;}
+img{-webkit-user-drag:none;user-select:none;}
+body{user-select:none;font-family:'Rajdhani',sans-serif;background:#f4f6fb;color:#0a0a1a;min-height:100vh;padding-bottom:60px;}
+input,textarea,select{user-select:text;}
+:focus-visible{outline:2px solid #1a6fff;outline-offset:2px;}
+button,a,.card{cursor:pointer;}
+:root{--blue:#1a6fff;--blue-dark:#0d4fd4;--blue-pale:#e8f0ff;--black:#0a0a1a;--white:#fff;--border:#d0d8f0;--gray:#f4f6fb;--text2:#4a5280;}
+
+#login-screen{position:fixed;inset:0;background:#fff;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;}
+.login-box{width:100%;max-width:380px;background:#fff;border:1.5px solid var(--border);border-radius:20px;padding:36px 28px;box-shadow:0 8px 40px rgba(26,111,255,0.08);}
+.login-logo{font-family:'Orbitron',sans-serif;font-weight:900;font-size:22px;color:var(--black);margin-bottom:6px;letter-spacing:1px;}
+.login-logo span{color:var(--blue);}
+.login-sub{font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:2px;color:var(--text2);margin-bottom:28px;}
+.fl{display:block;font-family:'Orbitron',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--text2);margin-bottom:6px;text-transform:uppercase;}
+.fi{width:100%;background:var(--gray);border:1.5px solid var(--border);border-radius:8px;padding:11px 14px;font-family:'Orbitron',sans-serif;font-size:12px;font-weight:600;color:var(--black);margin-bottom:14px;}
+.fi:focus{border-color:var(--blue);background:#fff;}
+.login-btn{width:100%;background:var(--blue);color:#fff;font-family:'Orbitron',sans-serif;font-size:11px;font-weight:800;letter-spacing:2px;padding:14px;border:none;border-radius:8px;margin-top:4px;}
+.login-btn:hover{background:var(--blue-dark);}
+.err{background:#fff0f0;border:1px solid #ffd0d0;border-radius:8px;padding:10px 14px;font-family:'Orbitron',sans-serif;font-size:9px;color:#cc0000;letter-spacing:1px;margin-bottom:14px;display:none;}
+
+#app{display:none;}
+nav{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1.5px solid var(--border);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;color:var(--black);}
+.nav-logo span{color:var(--blue);}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.login-method{font-family:'Orbitron',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;padding:5px 10px;border-radius:6px;background:var(--blue-pale);color:var(--blue);border:1px solid rgba(26,111,255,0.25);}
+.logout-btn2{font-family:'Orbitron',sans-serif;font-size:9px;font-weight:700;padding:6px 12px;border:1.5px solid var(--border);border-radius:6px;color:var(--text2);background:none;}
+.logout-btn2:hover{border-color:#cc0000;color:#cc0000;}
+
+.tab-bar{display:flex;gap:0;border-bottom:1.5px solid var(--border);background:#fff;overflow-x:auto;scrollbar-width:none;padding:0 16px;}
+.tab-bar::-webkit-scrollbar{display:none;}
+.tab{font-family:'Orbitron',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;padding:12px 14px;border-bottom:2px solid transparent;color:var(--text2);white-space:nowrap;transition:all 0.2s;background:none;border-left:none;border-right:none;border-top:none;}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue);}
+
+.section{display:none;padding:16px;}
+.section.active{display:block;}
+.card{background:#fff;border-radius:14px;border:1.5px solid var(--border);overflow:hidden;margin-bottom:16px;}
+.card-header{padding:14px 18px;border-bottom:1px solid var(--border);background:var(--gray);display:flex;align-items:center;justify-content:space-between;}
+.card-header h2{font-family:'Orbitron',sans-serif;font-size:11px;font-weight:800;letter-spacing:2px;color:var(--black);}
+.card-body{padding:16px 18px;}
+.fgroup{margin-bottom:14px;}
+.flabel{display:block;font-family:'Orbitron',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--text2);text-transform:uppercase;margin-bottom:6px;}
+.finput{width:100%;background:var(--gray);border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;font-family:'Orbitron',sans-serif;font-size:12px;font-weight:600;color:var(--black);transition:border-color 0.2s;}
+.finput:focus{border-color:var(--blue);background:#fff;}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.ffull{grid-column:1/-1;}
+.switch{position:relative;display:inline-block;width:52px;height:28px;}
+.switch input{opacity:0;width:0;height:0;}
+.slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#2a2d33;border-radius:28px;transition:.3s;border:1px solid #444;}
+.slider:before{position:absolute;content:"";height:22px;width:22px;left:3px;bottom:2px;background:#fff;border-radius:50%;transition:.3s;box-shadow:0 1px 4px rgba(0,0,0,.3);}
+input:checked + .slider{background:#22c55e;border-color:#16a34a;}
+input:checked + .slider:before{transform:translateX(24px);}
+
+.dz{border:2px dashed var(--border);border-radius:10px;padding:24px 16px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--gray);position:relative;}
+.dz:hover,.dz.over{border-color:var(--blue);background:var(--blue-pale);}
+.dz input{position:absolute;inset:0;opacity:0;cursor:pointer;z-index:1;}
+.dz-txt{font-family:'Orbitron',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;color:var(--text2);margin-top:8px;}
+.dz-preview{max-width:100%;border-radius:8px;margin-top:10px;display:none;}
+.upload-prog{display:none;align-items:center;gap:8px;background:var(--blue-pale);border:1px solid var(--blue);border-radius:6px;padding:8px 12px;margin-top:10px;font-family:'Orbitron',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;color:var(--blue);}
+.upload-prog.show{display:flex;}
+.spin{width:12px;height:12px;border:2px solid rgba(26,111,255,0.3);border-top-color:var(--blue);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+.btn-blue{background:var(--blue);color:#fff;font-family:'Orbitron',sans-serif;font-size:10px;font-weight:800;letter-spacing:1.5px;padding:12px 20px;border:none;border-radius:8px;width:100%;display:block;text-align:center;}
+.btn-blue:hover{background:var(--blue-dark);}
+.btn-ghost{background:none;border:1.5px solid var(--border);color:var(--text2);font-family:'Orbitron',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;padding:7px 14px;border-radius:6px;}
+.btn-ghost:hover{border-color:var(--blue);color:var(--blue);}
+.btn-red{background:#fff0f0;border:1px solid #ffd0d0;color:#cc0000;font-family:'Orbitron',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;padding:7px 14px;border-radius:6px;}
+.btn-green{background:rgba(0,200,83,0.1);border:1px solid rgba(0,200,83,0.3);color:#00c853;font-family:'Orbitron',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;padding:7px 14px;border-radius:6px;}
+.btn-gold{
+  background:linear-gradient(135deg,#ffc61a,#ff9d00);border:none;color:#1a0a00;
+  font-family:'Orbitron',sans-serif;font-size:9px;font-weight:800;letter-spacing:1px;
+  padding:8px 14px;border-radius:6px;cursor:pointer;box-shadow:0 4px 14px rgba(255,157,0,0.35);
+}
+.btn-gold:disabled{opacity:0.45;cursor:not-allowed;box-shadow:none;}
+.badge-gold{background:rgba(255,198,26,0.18);color:#b8860b;border:1px solid rgba(255,198,26,0.35);}
+.badge-blue{background:rgba(26,111,255,0.12);color:#1a6fff;border:1px solid rgba(26,111,255,0.25);}
+.confetti-layer{position:fixed;inset:0;pointer-events:none;z-index:99999;overflow:hidden;}
+.confetti-piece{position:absolute;width:8px;height:12px;top:-20px;animation:confettiFall linear forwards;border-radius:2px;}
+@keyframes confettiFall{0%{transform:translateY(0) rotate(0deg);opacity:1;}100%{transform:translateY(105vh) rotate(720deg);opacity:0;}}
+.select-burst{
+  position:fixed;left:50%;top:40%;transform:translate(-50%,-50%) scale(0.6);z-index:100000;
+  background:rgba(12,6,4,0.92);border:2px solid #ffc61a;border-radius:16px;padding:22px 28px;
+  font-family:'Orbitron',sans-serif;text-align:center;color:#ffc61a;pointer-events:none;
+  animation:burstIn .55s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.select-burst .sb-title{font-size:14px;font-weight:900;letter-spacing:1.5px;margin-bottom:6px;}
+.select-burst .sb-sub{font-size:11px;color:#fff;opacity:0.85;}
+@keyframes burstIn{0%{opacity:0;transform:translate(-50%,-50%) scale(0.5);}30%{opacity:1;transform:translate(-50%,-50%) scale(1.05);}100%{opacity:0;transform:translate(-50%,-60%) scale(1);}}
+
+.match-item{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;}
+.match-item:hover{border-color:var(--blue);}
+.match-thumb{width:56px;height:40px;border-radius:6px;object-fit:cover;background:var(--gray);flex-shrink:0;}
+.match-info{flex:1;min-width:0;}
+.match-name{font-family:'Orbitron',sans-serif;font-size:11px;font-weight:800;color:var(--black);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.match-meta{font-family:'Orbitron',sans-serif;font-size:8px;color:var(--text2);letter-spacing:1px;margin-top:2px;}
+.match-actions{display:flex;gap:6px;flex-shrink:0;}
+.status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.status-dot.open{background:#00c853;}
+.status-dot.closed{background:#ff6b00;}
+.status-dot.completed{background:#4a5280;}
+
+.reg-row{background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;}
+.reg-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.reg-team{font-family:'Orbitron',sans-serif;font-size:12px;font-weight:800;color:var(--black);}
+.reg-id{font-family:'Orbitron',sans-serif;font-size:8px;color:var(--text2);letter-spacing:1px;}
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:4px;font-family:'Orbitron',sans-serif;font-size:8px;font-weight:700;letter-spacing:1px;}
+.badge-orange{background:rgba(255,107,0,0.1);color:#ff6b00;border:1px solid rgba(255,107,0,0.3);}
+.badge-green{background:rgba(0,200,83,0.1);color:#00c853;border:1px solid rgba(0,200,83,0.3);}
+.badge-red{background:#fff0f0;color:#cc0000;border:1px solid #ffd0d0;}
+
+.form-hint{font-family:'Rajdhani',sans-serif;font-size:12px;color:var(--text2);background:var(--blue-pale);border:1px solid rgba(26,111,255,0.25);border-radius:8px;padding:10px 12px;margin-bottom:16px;line-height:1.45;}
+.form-hint b{color:var(--blue);font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:1px;}
+.field-row{margin-bottom:14px;}
+.field-row-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px;}
+.field-row-top .flabel{margin:0;}
+.show-tog{
+  display:inline-flex;align-items:center;gap:5px;flex-shrink:0;
+  font-family:'Orbitron',sans-serif;font-size:8px;font-weight:800;letter-spacing:1px;
+  color:var(--text2);background:var(--gray);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;cursor:pointer;user-select:none;transition:all 0.15s;
+}
+.show-tog input{width:14px;height:14px;accent-color:var(--blue);cursor:pointer;margin:0;}
+.show-tog:has(input:checked){background:var(--blue-pale);border-color:var(--blue);color:var(--blue);}
+.admin-only-tag{
+  font-family:'Orbitron',sans-serif;font-size:8px;font-weight:700;letter-spacing:1px;
+  color:var(--text2);background:var(--gray);border:1px solid var(--border);border-radius:4px;padding:4px 8px;
+}
+.field-note{font-family:'Rajdhani',sans-serif;font-size:11px;color:var(--text2);margin-top:6px;line-height:1.4;}
+.field-row-toggle-only{background:var(--gray);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;}
+.field-row-toggle-only .field-row-top{margin-bottom:4px;}
+.cf-row{
+  display:flex;align-items:center;gap:10px;background:var(--gray);
+  border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;
+}
+.cf-row .cf-info{flex:1;min-width:0;}
+.cf-row .cf-name{font-family:'Orbitron',sans-serif;font-size:11px;font-weight:800;color:var(--black);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cf-row .cf-meta{font-family:'Orbitron',sans-serif;font-size:8px;color:var(--text2);letter-spacing:1px;margin-top:3px;}
+
+.df-item{display:none;}
+.df-item input{width:16px;height:16px;accent-color:var(--blue);flex-shrink:0;cursor:pointer;}
+.df-item:has(input:checked){border-color:var(--blue);background:var(--blue-pale);color:var(--blue);}
+
+
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+.stat-mini{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:14px;text-align:center;}
+.stat-mini-val{font-family:'Orbitron',sans-serif;font-size:22px;font-weight:900;color:var(--blue);}
+.stat-mini-label{font-family:'Orbitron',sans-serif;font-size:8px;letter-spacing:1px;color:var(--text2);margin-top:4px;}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--black);color:#fff;font-family:'Orbitron',sans-serif;font-size:10px;font-weight:600;letter-spacing:1px;padding:12px 20px;border-radius:8px;z-index:9999;opacity:0;transition:all 0.3s;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;display:none;align-items:flex-end;}
+.modal-bg.open{display:flex;}
+.modal{background:#fff;border-radius:20px 20px 0 0;width:100%;max-height:90vh;overflow-y:auto;padding:0 20px 40px;animation:slideUp 0.3s ease;}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+.modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:14px auto 16px;}
+.modal-title{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:800;letter-spacing:1px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;}
+.modal-close{background:none;border:none;color:var(--text2);font-size:20px;}
+.wave-wrap{position:relative;overflow:hidden;flex-shrink:0;}
+.wave-loader{position:absolute;inset:0;overflow:hidden;background:#15161a;z-index:2;transition:opacity 0.35s ease;}
+.wave-loader.hide{opacity:0;pointer-events:none;}
+.wave-loader .wave-fill{position:absolute;left:-30%;width:160%;aspect-ratio:1/1;top:100%;border-radius:44%;background:rgba(26,111,255,0.30);animation:waveSpin 4.2s linear infinite;}
+.wave-loader .wave-fill.wave2{background:rgba(26,111,255,0.16);animation-duration:6.2s;animation-direction:reverse;}
+.wave-loader .wave-pct{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;font-family:'Orbitron',sans-serif;font-size:9px;font-weight:800;color:#1a6fff;}
+@keyframes waveSpin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+img.wave-target{opacity:0;transition:opacity 0.4s ease;}
+img.wave-target.loaded{opacity:1;}
+
+/* ── Announcements builder ── */
+.ann-list{display:flex;flex-direction:column;gap:10px;}
+.ann-item{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;align-items:flex-start;gap:12px;}
+.ann-item:hover{border-color:var(--blue);}
+.ann-item .ann-body{flex:1;min-width:0;}
+.ann-item .ann-title{font-family:'Orbitron',sans-serif;font-size:12px;font-weight:800;color:var(--black);}
+.ann-item .ann-meta{font-family:'Orbitron',sans-serif;font-size:8px;color:var(--text2);letter-spacing:1px;margin-top:4px;}
+.ann-item .ann-preview{font-family:'Rajdhani',sans-serif;font-size:13px;color:var(--text2);margin-top:6px;line-height:1.35;max-height:40px;overflow:hidden;}
+.ann-actions{display:flex;flex-direction:column;gap:6px;flex-shrink:0;}
+.block-palette{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+.block-chip{font-family:'Orbitron',sans-serif;font-size:8px;font-weight:700;letter-spacing:1px;padding:8px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--gray);color:var(--text2);cursor:grab;user-select:none;transition:all .15s;}
+.block-chip:hover,.block-chip:active{border-color:var(--blue);background:var(--blue-pale);color:var(--blue);}
+.block-chip:active{cursor:grabbing;}
+.blocks-canvas{min-height:120px;border:2px dashed var(--border);border-radius:12px;padding:12px;background:#fafbff;display:flex;flex-direction:column;gap:10px;}
+.blocks-canvas.drag-over{border-color:var(--blue);background:var(--blue-pale);}
+.block-card{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:12px;position:relative;cursor:grab;transition:box-shadow .15s,border-color .15s;}
+.block-card.dragging{opacity:0.55;border-color:var(--blue);box-shadow:0 8px 24px rgba(26,111,255,0.18);}
+.block-card:hover{border-color:rgba(26,111,255,0.45);}
+.block-card .bc-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;}
+.block-card .bc-type{font-family:'Orbitron',sans-serif;font-size:8px;font-weight:800;letter-spacing:1.5px;color:var(--blue);background:var(--blue-pale);padding:4px 8px;border-radius:4px;}
+.block-card .bc-drag{font-size:14px;color:var(--text2);cursor:grab;padding:0 4px;user-select:none;}
+.block-card .bc-colors{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.block-card .bc-colors label{font-family:'Orbitron',sans-serif;font-size:8px;font-weight:700;letter-spacing:1px;color:var(--text2);display:flex;align-items:center;gap:5px;}
+.block-card input[type="color"]{width:28px;height:28px;border:1.5px solid var(--border);border-radius:6px;padding:2px;background:#fff;cursor:pointer;}
+.block-preview-live{border-radius:8px;padding:12px 14px;margin-top:10px;font-family:'Rajdhani',sans-serif;font-size:14px;line-height:1.4;border:1px solid rgba(0,0,0,0.06);}
+.color-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.storage-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+@media(min-width:700px){.storage-grid{grid-template-columns:repeat(4,1fr);}}
+.storage-card{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:18px 16px;text-align:center;}
+.storage-card .sc-val{font-family:'Orbitron',sans-serif;font-size:22px;font-weight:900;color:var(--blue);line-height:1.1;}
+.storage-card .sc-label{font-family:'Orbitron',sans-serif;font-size:8px;letter-spacing:1.5px;color:var(--text2);margin-top:6px;}
+.storage-card.total{grid-column:1/-1;background:linear-gradient(135deg,#e8f0ff,#f0f4ff);border-color:rgba(26,111,255,0.35);}
+.storage-card.total .sc-val{font-size:28px;color:var(--blue-dark);}
+.storage-bar-track{height:10px;background:var(--gray);border-radius:6px;overflow:hidden;margin-top:14px;border:1px solid var(--border);}
+.storage-bar-fill{height:100%;background:linear-gradient(90deg,var(--blue),#5b9bff);border-radius:6px;transition:width .5s ease;}
+.storage-detail{font-family:'Rajdhani',sans-serif;font-size:13px;color:var(--text2);margin-top:10px;line-height:1.5;}
+.storage-table{width:100%;border-collapse:collapse;font-family:'Orbitron',sans-serif;font-size:10px;}
+.storage-table th,.storage-table td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);}
+.storage-table th{color:var(--text2);letter-spacing:1px;font-weight:700;font-size:8px;}
+.storage-table td{font-weight:600;color:var(--black);}
+.storage-table tr:last-child td{border-bottom:none;font-weight:800;color:var(--blue);}
+
+/* Paid / Free tournament type picker */
+.type-picker{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+.type-opt{
+  border:2px solid var(--border);border-radius:12px;padding:14px 12px;text-align:center;
+  background:var(--gray);cursor:pointer;transition:all .15s;user-select:none;
+}
+.type-opt:hover{border-color:rgba(26,111,255,0.45);}
+.type-opt.active{border-color:var(--blue);background:var(--blue-pale);box-shadow:0 0 0 3px rgba(26,111,255,0.12);}
+.type-opt .to-title{font-family:'Orbitron',sans-serif;font-size:12px;font-weight:800;letter-spacing:1px;color:var(--black);}
+.type-opt.active .to-title{color:var(--blue);}
+.type-opt .to-sub{font-family:'Rajdhani',sans-serif;font-size:12px;color:var(--text2);margin-top:4px;line-height:1.3;}
+.type-opt input{display:none;}
+.field-disabled{opacity:0.45;pointer-events:none;}
+.ann-img-dz{border:2px dashed var(--border);border-radius:8px;padding:14px;text-align:center;cursor:pointer;background:var(--gray);position:relative;margin-bottom:8px;}
+.ann-img-dz:hover,.ann-img-dz.over{border-color:var(--blue);background:var(--blue-pale);}
+.ann-img-dz input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;z-index:1;}
+.ann-img-dz .dz-txt{font-family:'Orbitron',sans-serif;font-size:8px;font-weight:700;letter-spacing:1px;color:var(--text2);margin-top:6px;}
+.ann-img-prev{max-width:100%;border-radius:6px;margin-top:8px;display:none;}
+
+/* REGISTRATION SEARCH — additive only */
+.reg-search-wrap{position:relative;margin:10px 0 12px}.reg-search{width:100%;padding-left:38px!important;padding-right:42px!important}.reg-search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--text2);pointer-events:none;z-index:2}.reg-search-clear{position:absolute;right:9px;top:50%;transform:translateY(-50%);width:28px;height:28px;border:0;border-radius:7px;background:rgba(255,255,255,.06);color:var(--text2);font-size:19px;line-height:1;cursor:pointer;display:none;z-index:3}.reg-search-info{font-family:'Orbitron',sans-serif;font-size:8px;letter-spacing:1px;color:var(--text2);margin:-4px 0 10px;text-align:right;min-height:12px}
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">NOT HUMANS <span>ESPORTS</span></div>
+    <div class="login-sub">ADMIN · PASSKEY ACCESS</div>
+    <div class="err" id="login-err">INVALID PASSKEY</div>
+    <label class="fl">ADMIN PASSKEY</label>
+    <input type="password" class="fi" id="l-passkey" placeholder="Enter admin passkey" autocomplete="current-password" style="margin-bottom:16px;"/>
+    <button class="login-btn" id="login-btn" onclick="doPasskeyLogin()">UNLOCK ADMIN PANEL</button>
+    <div style="margin-top:16px;font-family:'Orbitron',sans-serif;font-size:8px;letter-spacing:1px;color:var(--text2);text-align:center;line-height:1.5;">
+      Anonymous session · no email required
+    </div>
+  </div>
+</div>
+
+<div id="app">
+  <nav>
+    <div class="nav-logo">NOT HUMANS <span>ESPORTS</span> <span style="font-size:8px;color:var(--text2);letter-spacing:2px;margin-left:4px;">ADMIN</span></div>
+    <div class="nav-right">
+      <div class="login-method" id="login-method-badge">—</div>
+      <button class="logout-btn2" onclick="doLogout()">LOGOUT</button>
+    </div>
+  </nav>
+
+  <div class="tab-bar">
+    <button class="tab active" onclick="switchTab('matches',this)">MATCHES</button>
+    <button class="tab" onclick="switchTab('add-match',this)">ADD MATCH</button>
+    <button class="tab" onclick="switchTab('registrations',this)">REGISTRATIONS</button>
+    <button class="tab" onclick="switchTab('slots',this)">SLOT CLEANUP</button>
+    <button class="tab" onclick="switchTab('announcements',this)">ANNOUNCEMENTS</button>
+    <button class="tab" onclick="switchTab('hero',this)">HERO BANNER</button>
+    <button class="tab" onclick="switchTab('storage',this)">STORAGE</button>
+    <button class="tab" onclick="switchTab('fs-settings',this)">FREE SLOT SETUP</button>
+    <button class="tab" onclick="switchTab('fs-teams',this)">FREE SLOT TEAMS</button>
+    <button class="tab" onclick="switchTab('settings',this)">SETTINGS</button>
+  </div>
+
+  <div class="section active" id="tab-matches">
+    <div class="stats-row">
+      <div class="stat-mini"><div class="stat-mini-val" id="stat-matches">0</div><div class="stat-mini-label">MATCHES</div></div>
+      <div class="stat-mini"><div class="stat-mini-val" id="stat-regs">0</div><div class="stat-mini-label">REGISTRATIONS</div></div>
+      <div class="stat-mini"><div class="stat-mini-val" id="stat-pending">0</div><div class="stat-mini-label">PENDING</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h2>ALL MATCHES</h2><button class="btn-ghost" onclick="loadMatches()">REFRESH</button></div>
+      <div class="card-body" id="matches-list"><div style="text-align:center;padding:20px;font-family:'Orbitron',sans-serif;font-size:10px;color:var(--text2);">LOADING...</div></div>
+    </div>
+  </div>
+
+  <div class="section" id="tab-add-match">
+    <div class="card">
+      <div class="card-header"><h2 id="form-title">CREATE NEW MATCH</h2></div>
+      <div class="card-body">
+        <input type="hidden" id="edit-match-id"/>
+
+        <!-- PAID / FREE TOURNAMENT TYPE -->
+        <div class="form-hint" style="margin-bottom:12px;">Choose tournament type first. <b>Free</b> = no entry fee, still has prize &amp; slots. <b>Paid</b> = entry fee + prize.</div>
+        <div class="type-picker" id="match-type-picker">
+          <label class="type-opt active" id="type-opt-paid" onclick="setMatchType('paid')">
+            <input type="radio" name="match-type" value="paid" checked/>
+            <div class="to-title">PAID TOURNAMENT</div>
+            <div class="to-sub">Entry fee · Prize pool · Slots</div>
+          </label>
+          <label class="type-opt" id="type-opt-free" onclick="setMatchType('free')">
+            <input type="radio" name="match-type" value="free"/>
+            <div class="to-title">FREE TOURNAMENT</div>
+            <div class="to-sub">No entry · Prize · Max slots</div>
+          </label>
+        </div>
+
+        <div class="form-hint">Tick <b>SHOW</b> on any field to display it on the public tournament section. Unticked fields stay admin-only.</div>
+
+        <!-- IMAGE -->
+        <div class="field-row" data-field="image">
+          <div class="field-row-top">
+            <label class="flabel">MATCH BANNER IMAGE</label>
+            <label class="show-tog" title="Show on public page"><input type="checkbox" data-df="image" checked/> <span>SHOW</span></label>
+          </div>
+          <div class="dz" id="match-dz" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')" ondrop="handleImgDrop(event,'match-img-url','match-dz-prev','match-up-prog')" onclick="document.getElementById('match-img-inp').click()">
+            <input type="file" id="match-img-inp" accept="image/*" onchange="uploadImg(this.files[0],'match-img-url','match-dz-prev','match-up-prog')"/>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1a6fff" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <div class="dz-txt">TAP TO UPLOAD BANNER</div>
+            <img class="dz-preview" id="match-dz-prev" src="" alt=""/>
+          </div>
+          <div class="upload-prog" id="match-up-prog"><div class="spin"></div><span id="match-up-txt">UPLOADING...</span></div>
+          <input type="hidden" id="match-img-url"/>
+        </div>
+
+        <!-- TITLE -->
+        <div class="field-row" data-field="title">
+          <div class="field-row-top">
+            <label class="flabel">TITLE / MATCH NAME</label>
+            <label class="show-tog"><input type="checkbox" data-df="title" checked/> <span>SHOW</span></label>
+          </div>
+          <input type="text" class="finput" id="m-name" placeholder="NOT HUMANS CUP 2026"/>
+        </div>
+
+        <!-- SUBTITLE -->
+        <div class="field-row" data-field="subtitle">
+          <div class="field-row-top">
+            <label class="flabel">SUBTITLE</label>
+            <label class="show-tog"><input type="checkbox" data-df="subtitle" checked/> <span>SHOW</span></label>
+          </div>
+          <input type="text" class="finput" id="m-subtitle" placeholder="e.g. Season 7 Grand Finals · Open for all"/>
+        </div>
+
+        <!-- DATE + MODE -->
+        <div class="fgrid">
+          <div class="field-row" data-field="date">
+            <div class="field-row-top">
+              <label class="flabel">DATE &amp; TIME</label>
+              <label class="show-tog"><input type="checkbox" data-df="date" checked/> <span>SHOW</span></label>
+            </div>
+            <input type="text" class="finput" id="m-time" placeholder="Sunday, 1:30pm"/>
+          </div>
+          <div class="field-row" data-field="mode">
+            <div class="field-row-top">
+              <label class="flabel">MODE</label>
+              <label class="show-tog"><input type="checkbox" data-df="mode" checked/> <span>SHOW</span></label>
+            </div>
+            <select class="finput" id="m-mode-select" onchange="handleModeChange()">
+              <option value="4v4">4v4 (Squad)</option>
+              <option value="2v2">2v2</option>
+              <option value="1v1">1v1</option>
+              <option value="BR · SQUAD">BR · SQUAD</option>
+              <option value="other">Other (Custom)</option>
+            </select>
+            <input type="text" class="finput" id="m-mode-custom" placeholder="Enter custom mode" style="margin-top:8px;display:none;">
+          </div>
+        </div>
+
+        <!-- SLOTS + ENTRY -->
+        <div class="fgrid">
+          <div class="field-row" data-field="slots">
+            <div class="field-row-top">
+              <label class="flabel" id="m-slots-label">TOTAL SLOTS</label>
+              <label class="show-tog"><input type="checkbox" data-df="slots" checked/> <span>SHOW</span></label>
+            </div>
+            <input type="number" class="finput" id="m-slots" placeholder="12" min="1"/>
+            <div class="field-note" id="m-slots-note">How many teams can join this match</div>
+          </div>
+          <div class="field-row" data-field="entry" id="entry-field-wrap">
+            <div class="field-row-top">
+              <label class="flabel">ENTRY FEE (₹)</label>
+              <label class="show-tog"><input type="checkbox" data-df="entry" id="df-entry"/> <span>SHOW</span></label>
+            </div>
+            <input type="number" class="finput" id="m-entry" placeholder="50" min="0"/>
+            <div class="field-note" id="m-entry-note">Players pay this to register</div>
+          </div>
+        </div>
+
+        <!-- PRIZE + BOUNTY -->
+        <div class="fgrid">
+          <div class="field-row" data-field="prize">
+            <div class="field-row-top">
+              <label class="flabel">PRIZE POOL</label>
+              <label class="show-tog"><input type="checkbox" data-df="prize" checked/> <span>SHOW</span></label>
+            </div>
+            <input type="text" class="finput" id="m-prize" placeholder="₹5000"/>
+          </div>
+          <div class="field-row" data-field="bounty">
+            <div class="field-row-top">
+              <label class="flabel">BOUNTY (₹)</label>
+              <label class="show-tog"><input type="checkbox" data-df="bounty"/> <span>SHOW</span></label>
+            </div>
+            <input type="number" class="finput" id="m-bounty" placeholder="0"/>
+          </div>
+        </div>
+
+        <!-- PROGRESS + VISIT (display-only toggles, no extra inputs) -->
+        <div class="fgrid">
+          <div class="field-row field-row-toggle-only" data-field="progress">
+            <div class="field-row-top">
+              <label class="flabel">SLOT PROGRESS BAR</label>
+              <label class="show-tog"><input type="checkbox" data-df="progress" checked/> <span>SHOW</span></label>
+            </div>
+            <div class="field-note">Shows booked/total bar on public page</div>
+          </div>
+          <div class="field-row field-row-toggle-only" data-field="visitBtn">
+            <div class="field-row-top">
+              <label class="flabel">VISIT / REGISTER BUTTON</label>
+              <label class="show-tog"><input type="checkbox" data-df="visitBtn" checked/> <span>SHOW</span></label>
+            </div>
+            <div class="field-note">Links players to registration</div>
+          </div>
+        </div>
+
+        <!-- STATUS (admin only, always saved) -->
+        <div class="field-row" data-field="status">
+          <div class="field-row-top">
+            <label class="flabel">MATCH STATUS</label>
+            <span class="admin-only-tag">ADMIN ONLY</span>
+          </div>
+          <select class="finput" id="m-status">
+            <option value="open">OPEN — Registration Open</option>
+            <option value="closed">CLOSED — Registration Closed</option>
+            <option value="completed">COMPLETED — Match Over</option>
+          </select>
+        </div>
+
+        <div class="fgrid">
+          <div class="field-row" data-field="winner">
+            <div class="field-row-top">
+              <label class="flabel">WINNER TEAM</label>
+              <span class="admin-only-tag">IF COMPLETED</span>
+            </div>
+            <input type="text" class="finput" id="m-winner" placeholder="Leave blank if ongoing"/>
+          </div>
+          <div class="field-row" data-field="winnerSub">
+            <div class="field-row-top">
+              <label class="flabel">WINNER SUBTITLE</label>
+              <span class="admin-only-tag">IF COMPLETED</span>
+            </div>
+            <input type="text" class="finput" id="m-winner-sub" placeholder="e.g. SQUAD CHAMPIONS"/>
+          </div>
+        </div>
+
+        <!-- SCHEDULED SLOT OPEN -->
+        <div class="field-row" data-field="slotOpen">
+          <div class="field-row-top">
+            <label class="flabel">SCHEDULED SLOT OPEN</label>
+            <label class="switch"><input type="checkbox" id="m-slot-open-enabled"/><span class="slider"></span></label>
+          </div>
+          <input type="datetime-local" class="finput" id="m-slot-open-at"/>
+          <div class="field-note">When enabled, registration stays locked until this time</div>
+        </div>
+
+        <!-- CUSTOM REGISTRATION INPUTS -->
+        <div class="field-row" style="border-top:1.5px solid var(--border);padding-top:16px;margin-top:8px;">
+          <div class="field-row-top" style="margin-bottom:10px;">
+            <label class="flabel" style="margin:0;">REGISTRATION FORM INPUTS</label>
+            <button type="button" class="btn-ghost" onclick="openCustomFieldModal()">+ ADD INPUT</button>
+          </div>
+          <div class="field-note" style="margin-bottom:10px;">Players fill these when registering. Toggle SHOW on each to include it on the form (always collected when listed).</div>
+          <div id="custom-fields-list" style="display:flex;flex-direction:column;gap:8px;">
+            <div id="custom-fields-empty" style="font-family:'Orbitron',sans-serif;font-size:9px;color:var(--text2);letter-spacing:1px;padding:14px;text-align:center;border:1.5px dashed var(--border);border-radius:8px;">NO CUSTOM INPUTS — DEFAULT REG FORM ONLY</div>
+          </div>
+        </div>
+
+        <button class="btn-blue" onclick="saveMatch()" id="save-match-btn" style="margin-top:18px;">PUBLISH MATCH</button>
+        <button class="btn-ghost" style="width:100%;margin-top:10px;display:none;" id="cancel-edit-btn" onclick="cancelEdit()">CANCEL EDIT</button>
+      </div>
+    </div>
+  </div>
+
+<div class="section" id="tab-registrations">
+    <div class="fgroup">
+      <select class="finput" id="reg-match-filter" onchange="loadRegistrations()">
+        <option value="all">ALL MATCHES</option>
+      </select>
+    </div>
+    <div class="reg-search-wrap">
+      <svg class="reg-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+      <input type="search" class="finput reg-search" id="reg-search" placeholder="SEARCH TEAM / PHONE / GUILD / PLAYER / UID / EMAIL / ANYTHING..." autocomplete="off" oninput="filterRegistrations()"/>
+      <button type="button" class="reg-search-clear" id="reg-search-clear" onclick="clearRegSearch()">×</button>
+    </div>
+    <div class="reg-search-info" id="reg-search-info"></div>
+    <div id="regs-list"><div style="text-align:center;padding:20px;font-family:'Orbitron',sans-serif;font-size:10px;color:var(--text2);">LOADING...</div></div>
+  </div>
+
+  <!-- ══════════════ SLOT CLEANUP ══════════════ -->
+  <div class="section" id="tab-slots">
+    <div class="form-hint">Slots here means <b>registrations</b> tied to a tournament (TT). This section finds slots left behind after a TT was deleted, and lets you bulk-delete slots for a TT that still exists.</div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>ORPHANED SLOTS <span id="orphan-count-badge" class="badge badge-orange" style="margin-left:8px;">0</span></h2>
+        <button class="btn-ghost" onclick="scanOrphanedSlots()">RESCAN</button>
+      </div>
+      <div class="card-body">
+        <div class="form-hint" style="margin-bottom:12px;">These slots belong to a TT that no longer exists — it was deleted. Safe to remove.</div>
+        <div id="orphan-slots-list"><div style="text-align:center;padding:20px;font-family:'Orbitron',sans-serif;font-size:10px;color:var(--text2);">SCANNING...</div></div>
+        <button class="btn-red" style="width:100%;margin-top:14px;padding:12px;" id="orphan-delete-all-btn" onclick="deleteOrphanedSlots()" disabled>DELETE ALL ORPHANED SLOTS</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h2>DELETE SLOTS — SELECT TOURNAMENT</h2></div>
+      <div class="card-body">
+        <div class="fgroup">
+          <label class="flabel">TOURNAMENT (TT)</label>
+          <select class="finput" id="slot-tt-select" onchange="loadSlotsForTT()">
+            <option value="">— SELECT A TT —</option>
+          </select>
+        </div>
+        <div id="slot-manual-wrap" style="display:none;">
+          <div class="reg-top" style="margin-bottom:10px;">
+            <label style="display:flex;align-items:center;gap:8px;font-family:'Orbitron',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;color:var(--text2);">
+              <input type="checkbox" id="slot-select-all" onchange="toggleAllSlots(this.checked)"/> SELECT ALL
+            </label>
+            <span class="badge badge-blue" id="slot-selected-count">0 SELECTED</span>
+          </div>
+          <div id="slot-manual-list"></div>
+          <button class="btn-red" style="width:100%;margin-top:14px;padding:12px;" id="slot-delete-selected-btn" onclick="deleteSelectedSlots()" disabled>DELETE SELECTED SLOTS</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="tab-hero">
+    <div class="card">
+      <div class="card-header"><h2>HERO BANNER SETTINGS</h2></div>
+      <div class="card-body">
+        <div class="fgroup">
+          <label class="flabel">HERO BACKGROUND IMAGE</label>
+          <div class="dz" id="hero-dz" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')" ondrop="handleImgDrop(event,'hero-img-url','hero-dz-prev','hero-up-prog')" onclick="document.getElementById('hero-img-inp').click()">
+            <input type="file" id="hero-img-inp" accept="image/*" onchange="uploadImg(this.files[0],'hero-img-url','hero-dz-prev','hero-up-prog')"/>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1a6fff" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <div class="dz-txt">TAP TO UPLOAD HERO BG</div>
+            <img class="dz-preview" id="hero-dz-prev" src="" alt=""/>
+          </div>
+          <div class="upload-prog" id="hero-up-prog"><div class="spin"></div><span id="hero-up-txt">UPLOADING...</span></div>
+          <input type="hidden" id="hero-img-url"/>
+        </div>
+        <div class="fgroup"><label class="flabel">BADGE TEXT (LIVE tag)</label><input type="text" class="finput" id="hero-tag" placeholder="LIVE · GRAND FINAL"/></div>
+        <div class="fgroup"><label class="flabel">TITLE (use | to split highlight: BATTLE FOR|THE CROWN)</label><input type="text" class="finput" id="hero-title" placeholder="BATTLE FOR|THE CROWN"/></div>
+        <div class="fgroup"><label class="flabel">SUBTITLE</label><input type="text" class="finput" id="hero-sub" placeholder="NOT HUMANS · ELITE TOURNAMENT ARENA"/></div>
+        <div class="fgroup"><label class="flabel">STATUS CARD LABEL</label><input type="text" class="finput" id="hero-status-label" placeholder="Current title match"/></div>
+        <div class="fgroup"><label class="flabel">STATUS CARD VALUE</label><input type="text" class="finput" id="hero-status-value" placeholder="PG VS MJX · GRAND FINAL"/></div>
+        <button class="btn-blue" onclick="saveHero()">SAVE HERO BANNER</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ ANNOUNCEMENTS ══════════════ -->
+  <div class="section" id="tab-announcements">
+    <div class="card">
+      <div class="card-header">
+        <h2>ALL ANNOUNCEMENTS</h2>
+        <button class="btn-ghost" type="button" onclick="startNewAnnouncement()">+ NEW</button>
+      </div>
+      <div class="card-body">
+        <div class="form-hint">Build rich announcements with <b>drag-and-drop blocks</b>. Colors, text, buttons, and images. Active ones appear on the public site.</div>
+        <div id="ann-list" class="ann-list">
+          <div style="text-align:center;padding:20px;font-family:'Orbitron',sans-serif;font-size:10px;color:var(--text2);">LOADING…</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="ann-editor-card" style="display:none;">
+      <div class="card-header">
+        <h2 id="ann-editor-title">CREATE ANNOUNCEMENT</h2>
+        <button class="btn-ghost" type="button" onclick="cancelAnnouncementEdit()">CANCEL</button>
+      </div>
+      <div class="card-body">
+        <input type="hidden" id="ann-edit-id"/>
+        <div class="fgroup">
+          <label class="flabel">INTERNAL NAME (admin only)</label>
+          <input type="text" class="finput" id="ann-name" placeholder="e.g. Season 7 open registration"/>
+        </div>
+        <div class="fgrid">
+          <div class="fgroup">
+            <label class="flabel">ACTIVE</label>
+            <label class="switch"><input type="checkbox" id="ann-active" checked/><span class="slider"></span></label>
+          </div>
+          <div class="fgroup">
+            <label class="flabel">PIN TO TOP</label>
+            <label class="switch"><input type="checkbox" id="ann-pinned"/><span class="slider"></span></label>
+          </div>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">STYLE PRESET (outer card)</label>
+          <select class="finput" id="ann-style">
+            <option value="gold">Gold · Dark (matches site)</option>
+            <option value="blue">Blue · Light</option>
+            <option value="red">Alert · Red</option>
+            <option value="green">Success · Green</option>
+            <option value="custom">Custom colors</option>
+          </select>
+        </div>
+        <div class="fgrid" id="ann-custom-colors" style="display:none;">
+          <div class="fgroup">
+            <label class="flabel">CARD BG</label>
+            <input type="color" class="finput" id="ann-bg" value="#1a0a00" style="height:42px;padding:4px;"/>
+          </div>
+          <div class="fgroup">
+            <label class="flabel">CARD TEXT</label>
+            <input type="color" class="finput" id="ann-fg" value="#ffc61a" style="height:42px;padding:4px;"/>
+          </div>
+        </div>
+
+        <div class="fgroup" style="margin-top:8px;">
+          <label class="flabel">BUILDER — TAP A BLOCK TO ADD · DRAG TO REORDER</label>
+          <div class="block-palette">
+            <button type="button" class="block-chip" onclick="addAnnBlock('title')">TITLE</button>
+            <button type="button" class="block-chip" onclick="addAnnBlock('text')">TEXT</button>
+            <button type="button" class="block-chip" onclick="addAnnBlock('badge')">BADGE</button>
+            <button type="button" class="block-chip" onclick="addAnnBlock('button')">BUTTON / LINK</button>
+            <button type="button" class="block-chip" onclick="addAnnBlock('image')">IMAGE</button>
+            <button type="button" class="block-chip" onclick="addAnnBlock('divider')">DIVIDER</button>
+            <button type="button" class="block-chip" onclick="addAnnBlock('spacer')">SPACER</button>
+          </div>
+          <div id="ann-blocks-canvas" class="blocks-canvas" ondragover="onBlockCanvasDragOver(event)" ondrop="onBlockCanvasDrop(event)" ondragleave="this.classList.remove('drag-over')">
+            <div id="ann-blocks-empty" style="font-family:'Orbitron',sans-serif;font-size:9px;color:var(--text2);letter-spacing:1px;text-align:center;padding:24px;">NO BLOCKS YET — TAP A CHIP ABOVE</div>
+          </div>
+        </div>
+
+        <div class="fgroup" style="margin-top:16px;">
+          <label class="flabel">LIVE PREVIEW</label>
+          <div id="ann-live-preview" style="border-radius:12px;padding:16px;background:#0c0604;color:#fff8f0;min-height:60px;border:1px solid rgba(255,198,26,0.25);"></div>
+        </div>
+
+        <button class="btn-blue" style="margin-top:12px;" onclick="saveAnnouncement()" id="ann-save-btn">PUBLISH ANNOUNCEMENT</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ STORAGE ══════════════ -->
+  <div class="section" id="tab-storage">
+    <div class="card">
+      <div class="card-header">
+        <h2>STORAGE · FREE PLAN (SPARK)</h2>
+        <button class="btn-ghost" type="button" onclick="loadStorageStats()">REFRESH</button>
+      </div>
+      <div class="card-body">
+        <div class="form-hint">
+          Plan: <b>Spark (Free)</b> · Stored data limit <b>1 GiB</b>.
+          Document sizes below are estimated from your collections. Exact live usage is in
+          <b>Firebase Console → Usage and billing</b>. Images on ImgBB do <b>not</b> count toward the 1 GiB Firestore limit.
+        </div>
+
+        <!-- Free tier quota reference -->
+        <div class="storage-grid" style="margin-bottom:18px;">
+          <div class="storage-card">
+            <div class="sc-val" style="font-size:16px;">1 GiB</div>
+            <div class="sc-label">STORED DATA LIMIT</div>
+          </div>
+          <div class="storage-card">
+            <div class="sc-val" style="font-size:16px;">50K</div>
+            <div class="sc-label">READS / DAY</div>
+          </div>
+          <div class="storage-card">
+            <div class="sc-val" style="font-size:16px;">20K</div>
+            <div class="sc-label">WRITES / DAY</div>
+          </div>
+          <div class="storage-card">
+            <div class="sc-val" style="font-size:16px;">10 GiB</div>
+            <div class="sc-label">TRANSFER / MONTH</div>
+          </div>
+        </div>
+
+        <!-- Live estimates -->
+        <div class="storage-grid">
+          <div class="storage-card">
+            <div class="sc-val" id="st-users">—</div>
+            <div class="sc-label">TOTAL USERS</div>
+          </div>
+          <div class="storage-card">
+            <div class="sc-val" id="st-docs">—</div>
+            <div class="sc-label">DOCUMENTS</div>
+          </div>
+          <div class="storage-card">
+            <div class="sc-val" id="st-doc-bytes">—</div>
+            <div class="sc-label">FIRESTORE DATA</div>
+          </div>
+          <div class="storage-card">
+            <div class="sc-val" id="st-other">—</div>
+            <div class="sc-label">IMAGES (IMGBB)</div>
+          </div>
+          <div class="storage-card total">
+            <div class="sc-val" id="st-total">—</div>
+            <div class="sc-label">FIRESTORE USED OF 1 GiB FREE LIMIT</div>
+            <div class="storage-bar-track"><div class="storage-bar-fill" id="st-bar" style="width:0%"></div></div>
+            <div class="storage-detail" id="st-detail">Counting collections…</div>
+          </div>
+        </div>
+
+        <table class="storage-table" id="st-table">
+          <thead>
+            <tr><th>COLLECTION</th><th>DOCS</th><th>EST. SIZE</th><th>% OF 1 GiB</th></tr>
+          </thead>
+          <tbody id="st-tbody">
+            <tr><td colspan="4" style="text-align:center;color:var(--text2);">Loading…</td></tr>
+          </tbody>
+        </table>
+
+        <div class="form-hint" style="margin-top:16px;margin-bottom:0;">
+          <b>Note:</b> Daily reads / writes / deletes cannot be read from the client SDK.
+          Check real quota burn in Firebase Console → <b>Usage and billing</b>.
+          Deletes quota is also <b>20,000 / day</b> on Spark.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ FREE SLOT SETUP ══════════════ -->
+  <div class="section" id="tab-fs-settings">
+    <div class="card">
+      <div class="card-header"><h2>FREE SLOT SETTINGS &amp; TIMING</h2></div>
+      <div class="card-body">
+        <div class="form-hint">Public page: <b>free-slot.html</b>. Players must Google-login, answer MCQ, enter unique Guild Name + Phone. Status starts as <b>verifying</b>.</div>
+
+        <div class="fgrid">
+          <div class="fgroup">
+            <label class="flabel">ENABLE REGISTRATION</label>
+            <label class="switch"><input type="checkbox" id="fs-enabled"/><span class="slider"></span></label>
+          </div>
+          <div class="fgroup">
+            <label class="flabel">MAX TEAMS (cap)</label>
+            <input type="number" class="finput" id="fs-max" value="100" min="1" max="500"/>
+          </div>
+        </div>
+        <div class="fgrid">
+          <div class="fgroup">
+            <label class="flabel">SELECT LIMIT (auto-delete rest)</label>
+            <input type="number" class="finput" id="fs-select-limit" value="30" min="1" max="100"/>
+          </div>
+          <div class="fgroup">
+            <label class="flabel">MIN CORRECT ANSWERS</label>
+            <input type="number" class="finput" id="fs-min-correct" value="0" min="0"/>
+          </div>
+        </div>
+
+        <div class="fgroup">
+          <label class="flabel">SCHEDULE OPEN AT (optional)</label>
+          <input type="datetime-local" class="finput" id="fs-open-at"/>
+          <div class="field-note">Leave empty = open immediately when enabled. Timer shows on public page until this time.</div>
+        </div>
+
+        <div class="fgroup"><label class="flabel">BADGE TEXT</label><input type="text" class="finput" id="fs-badge" placeholder="FREE SLOT"/></div>
+        <div class="fgroup"><label class="flabel">TITLE (use | for gold highlight)</label><input type="text" class="finput" id="fs-title" placeholder="FREE SLOT|REGISTRATION"/></div>
+        <div class="fgroup"><label class="flabel">SUBTITLE</label><input type="text" class="finput" id="fs-subtitle" placeholder="Answer MAC rules quiz and submit guild details"/></div>
+        <div class="fgroup"><label class="flabel">CLOSED MESSAGE</label><input type="text" class="finput" id="fs-closed-msg" placeholder="Registration is currently closed."/></div>
+
+        <div class="fgroup" style="margin-top:18px;border-top:1.5px solid var(--border);padding-top:16px;">
+          <div class="field-row-top" style="margin-bottom:10px;">
+            <label class="flabel" style="margin:0;">MCQ QUESTIONS</label>
+            <button type="button" class="btn-ghost" onclick="fsAddQuestion()">+ ADD QUESTION</button>
+          </div>
+          <div class="field-note" style="margin-bottom:10px;">Each question needs text, options (A B C D…), and mark the correct option index (0 = A).</div>
+          <div id="fs-questions-list"></div>
+        </div>
+
+        <button class="btn-blue" style="margin-top:18px;" onclick="saveFreeSlotSettings()">SAVE FREE SLOT SETTINGS</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ FREE SLOT TEAMS ══════════════ -->
+  <div class="section" id="tab-fs-teams">
+    <div class="stats-row">
+      <div class="stat-mini"><div class="stat-mini-val" id="fs-stat-total">0</div><div class="stat-mini-label">TOTAL</div></div>
+      <div class="stat-mini"><div class="stat-mini-val" id="fs-stat-verifying">0</div><div class="stat-mini-label">VERIFYING</div></div>
+      <div class="stat-mini"><div class="stat-mini-val" id="fs-stat-selected">0</div><div class="stat-mini-label">SELECTED</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h2>FREE SLOT REGISTRATIONS</h2>
+        <button class="btn-ghost" onclick="loadFreeSlotTeams()">REFRESH</button>
+      </div>
+      <div class="card-body">
+        <div class="form-hint">Tap a team to view details. Use <b>SELECT</b> to pick teams. When selected count reaches the Select Limit (default 30), remaining verifying teams are auto-deleted.</div>
+        <div class="fgroup">
+          <select class="finput" id="fs-status-filter" onchange="renderFreeSlotTeams()">
+            <option value="all">ALL</option>
+            <option value="verifying">VERIFYING</option>
+            <option value="selected">SELECTED</option>
+            <option value="rejected">REJECTED</option>
+          </select>
+        </div>
+        <div id="fs-teams-list"><div style="text-align:center;padding:20px;font-family:'Orbitron',sans-serif;font-size:10px;color:var(--text2);">LOADING…</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FS DETAIL MODAL -->
+  <div class="modal-bg" id="fs-modal">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title">TEAM DETAILS <button class="modal-close" onclick="closeFsModal()">×</button></div>
+      <div id="fs-modal-body"></div>
+      <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+        <button class="btn-gold" id="fs-btn-select" onclick="fsSelectTeam()">SELECT TEAM</button>
+        <button class="btn-red" id="fs-btn-reject" onclick="fsRejectTeam()">REJECT</button>
+        <button class="btn-red" onclick="fsDeleteTeam()">DELETE</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="tab-settings">
+    <div class="card">
+      <div class="card-header"><h2>SITE BACKGROUNDS</h2></div>
+      <div class="card-body">
+        <div class="fgroup">
+          <label class="flabel">PAGE BACKGROUND (lightly visible under UI)</label>
+          <div class="dz" id="pagebg-dz" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')" ondrop="handleImgDrop(event,'pagebg-img-url','pagebg-dz-prev','pagebg-up-prog')" onclick="document.getElementById('pagebg-img-inp').click()">
+            <input type="file" id="pagebg-img-inp" accept="image/*" onchange="uploadImg(this.files[0],'pagebg-img-url','pagebg-dz-prev','pagebg-up-prog')"/>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1a6fff" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <div class="dz-txt">TAP TO UPLOAD PAGE BG</div>
+            <img class="dz-preview" id="pagebg-dz-prev" src="" alt=""/>
+          </div>
+          <div class="upload-prog" id="pagebg-up-prog"><div class="spin"></div><span id="pagebg-up-txt">UPLOADING...</span></div>
+          <input type="hidden" id="pagebg-img-url"/>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h2>PAYMENT & SOCIAL</h2></div>
+      <div class="card-body">
+        <div class="fgroup"><label class="flabel">UPI ID (for QR code)</label><input type="text" class="finput" id="set-upi" placeholder="yourname@upi"/></div>
+        <div class="fgroup"><label class="flabel">WHATSAPP GROUP LINK</label><input type="text" class="finput" id="set-wa" placeholder="https://chat.whatsapp.com/Bvywn4d4G0zGNfWjp2ulRK"/></div>
+        <div class="fgroup"><label class="flabel">WHATSAPP CHANNEL / COMMUNITY</label><input type="text" class="finput" id="set-wa-channel" placeholder="https://whatsapp.com/channel/0029VbCV7TqLo4hlM05Vn53h"/></div>
+        <div class="fgroup"><label class="flabel">ADMIN WHATSAPP NUMBER</label><input type="tel" class="finput" id="set-admin-wa" placeholder="91XXXXXXXXXX"/></div>
+        <div class="fgroup"><label class="flabel">INSTAGRAM</label><input type="text" class="finput" id="set-ig" placeholder="@handle or full URL"/></div>
+        <div class="fgroup"><label class="flabel">DISCORD</label><input type="text" class="finput" id="set-dc" placeholder="https://discord.gg/7hNSDmKGFG"/></div>
+        <div class="fgroup">
+          <label class="flabel">GOOGLE SCRIPT WEB APP URL</label>
+          <input type="url" class="finput" id="set-gas-url" placeholder="https://script.google.com/macros/s/…/exec"/>
+          <div class="field-note">Deploy Code.gs as Web App (Anyone) and paste the /exec URL here. Confirmation emails go through this script.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h2>SIDEBAR LINKS</h2>
+        <button class="btn-ghost" type="button" onclick="addSidebarLinkRow()">+ ADD LINK</button>
+      </div>
+      <div class="card-body">
+        <div class="form-hint" style="margin-bottom:12px;">Add up to <b>7</b> custom links for the site sidebar. Name = label players see. URL = destination (Instagram, Discord, WhatsApp, or any page).</div>
+        <div id="sidebar-links-editor"></div>
+        <div id="sidebar-links-empty" style="font-family:'Orbitron',sans-serif;font-size:9px;color:var(--text2);letter-spacing:1px;padding:14px;text-align:center;border:1.5px dashed var(--border);border-radius:8px;">NO CUSTOM LINKS YET</div>
+      </div>
+    </div>
+    <div class="card" id="rules-manager-card"><div class="card-header"><h2>RULES MANAGER</h2></div><div class="card-body"><div class="form-hint">Update the public <b>RULES</b> page. One rule per line. Changes save to Firestore → settings/global → rulesPage.</div><div id="rules-editor"></div><div id="rules-empty" style="font-family:'Orbitron',sans-serif;font-size:9px;color:var(--text2);letter-spacing:1px;padding:14px;text-align:center;border:1.5px dashed var(--border);border-radius:8px;">NO RULE SECTIONS YET</div><div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;"><button class="btn-ghost" type="button" onclick="addRuleSection()">+ ADD SECTION</button><button class="btn-gold" type="button" onclick="saveRulesPage()">SAVE RULES</button></div></div></div>
+    <!-- STATS (public homepage numbers) -->
+    <div class="card">
+      <div class="card-header"><h2>HOMEPAGE STATS</h2></div>
+      <div class="card-body">
+        <div class="form-hint">These numbers appear on the public site under the pipeline. Edit value + label for each card.</div>
+        <div class="fgrid">
+          <div class="fgroup">
+            <label class="flabel">STAT 1 — VALUE</label>
+            <input type="number" class="finput" id="stat1-val" placeholder="1280"/>
+            <label class="flabel" style="margin-top:8px;">STAT 1 — LABEL</label>
+            <input type="text" class="finput" id="stat1-label" placeholder="Teams registered"/>
+          </div>
+          <div class="fgroup">
+            <label class="flabel">STAT 2 — VALUE</label>
+            <input type="number" class="finput" id="stat2-val" placeholder="7"/>
+            <label class="flabel" style="margin-top:8px;">STAT 2 — LABEL</label>
+            <input type="text" class="finput" id="stat2-label" placeholder="Seasons run"/>
+          </div>
+          <div class="fgroup">
+            <label class="flabel">STAT 3 — VALUE</label>
+            <input type="number" class="finput" id="stat3-val" placeholder="90"/>
+            <label class="flabel" style="margin-top:8px;">STAT 3 — LABEL</label>
+            <input type="text" class="finput" id="stat3-label" placeholder="Days per season"/>
+          </div>
+          <div class="fgroup">
+            <label class="flabel">STAT 4 — VALUE</label>
+            <input type="number" class="finput" id="stat4-val" placeholder="2400"/>
+            <label class="flabel" style="margin-top:8px;">STAT 4 — LABEL</label>
+            <input type="text" class="finput" id="stat4-label" placeholder="Community members"/>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TICKER STRIP -->
+    <div class="card">
+      <div class="card-header">
+        <h2>TICKER STRIP</h2>
+        <button class="btn-ghost" type="button" onclick="addTickerItem()">+ ADD LINE</button>
+      </div>
+      <div class="card-body">
+        <div class="form-hint">Scrolling strip under the hero. Turn off to hide. Set direction Left→Right or Right→Left.</div>
+        <div class="fgroup" style="display:flex;align-items:center;justify-content:space-between;">
+          <label class="flabel" style="margin:0;">SHOW TICKER</label>
+          <label class="switch"><input type="checkbox" id="ticker-enabled" checked/><span class="slider"></span></label>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">MOVEMENT DIRECTION</label>
+          <select class="finput" id="ticker-direction">
+            <option value="left">Right → Left (classic)</option>
+            <option value="right">Left → Right</option>
+          </select>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">SPEED (seconds for one loop)</label>
+          <input type="number" class="finput" id="ticker-speed" placeholder="28" min="8" max="120" value="28"/>
+        </div>
+        <div id="ticker-items-editor" style="display:flex;flex-direction:column;gap:8px;"></div>
+        <div id="ticker-items-empty" style="font-family:'Orbitron',sans-serif;font-size:9px;color:var(--text2);letter-spacing:1px;padding:14px;text-align:center;border:1.5px dashed var(--border);border-radius:8px;">NO TICKER LINES — ADD ONE ABOVE</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h2>ADMIN PASSKEY</h2></div>
+      <div class="card-body">
+        <div class="form-hint">Passkey is stored as <b>SHA-256</b> in Firestore (<b>settings/adminAuth</b>). Login uses Firebase <b>Anonymous</b> auth. After unlock once, this browser stays logged in until you press LOGOUT.</div>
+        <div class="fgroup"><label class="flabel">CURRENT PASSKEY</label><input type="password" class="finput" id="pk-current" placeholder="Current passkey" autocomplete="current-password"/></div>
+        <div class="fgroup"><label class="flabel">NEW PASSKEY</label><input type="password" class="finput" id="pk-new" placeholder="Min 6 characters" autocomplete="new-password"/></div>
+        <div class="fgroup"><label class="flabel">CONFIRM NEW PASSKEY</label><input type="password" class="finput" id="pk-confirm" placeholder="Repeat new passkey" autocomplete="new-password"/></div>
+        <button class="btn-blue" type="button" id="pk-change-btn" onclick="changeAdminPasskey()">CHANGE PASSKEY</button>
+        <div class="field-note" style="margin-top:12px;">Default first-time passkey is <b>NH_ADMIN_2026</b> until you change it. Changing the passkey does not log you out.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h2>MAINTENANCE MODE</h2></div>
+      <div class="card-body">
+        <div class="fgroup" style="display:flex;align-items:center;justify-content:space-between;">
+          <label class="flabel" style="margin:0;">ENABLE MAINTENANCE</label>
+          <label class="switch"><input type="checkbox" id="set-maint-toggle"/><span class="slider"></span></label>
+        </div>
+        <div class="fgroup"><label class="flabel">REASON MESSAGE</label><textarea class="finput" id="set-maint-reason" rows="3" placeholder="We are performing updates…"></textarea></div>
+        <button class="btn-blue" onclick="saveSettings()">SAVE SETTINGS</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="reg-modal" onclick="if(event.target===this)closeRegModal()">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">REGISTRATION <button class="modal-close" onclick="closeRegModal()">×</button></div>
+    <div id="reg-modal-body"></div>
+    <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;" id="reg-modal-actions">
+      <button class="btn-gold" id="reg-btn-select" style="display:none;" onclick="selectTeamForSlot()">SELECT FOR SLOT</button>
+      <button class="btn-green" id="reg-btn-verify" onclick="promptVerificationCode()">VERIFY CODE</button>
+      <button class="btn-blue" id="reg-btn-email" style="display:none;" onclick="resendRegConfirmationEmail()">SEND CONFIRM EMAIL</button>
+      <button class="btn-red" onclick="updateStatus('rejected')">REJECT</button>
+      <button class="btn-ghost" onclick="deleteCurrentRegistration()">DELETE</button>
+    </div>
+  </div>
+</div>
+<div class="modal-bg" id="verify-code-modal" onclick="if(event.target===this)closeVerifyCodeModal()">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">ENTER VERIFICATION CODE <button class="modal-close" onclick="closeVerifyCodeModal()">×</button></div>
+    <input type="text" class="finput" id="verify-code-input" placeholder="CODE" style="text-transform:uppercase;letter-spacing:2px;"/>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn-green" style="flex:1;" onclick="verifyAndUpdate(true)">CONFIRM IF MATCH</button>
+      <button class="btn-red" style="flex:1;" onclick="verifyAndUpdate(false)">REJECT</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal-bg" id="custom-field-modal" onclick="if(event.target===this)closeCustomFieldModal()">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">ADD CUSTOM INPUT <button class="modal-close" onclick="closeCustomFieldModal()">×</button></div>
+
+    <div class="form-hint" style="margin-bottom:12px;">Tap a <b>template</b> to auto-fill, or build a custom field below. Templates are added to the match form that players see on <b>reg.html</b>.</div>
+
+    <div class="fgroup">
+      <label class="flabel">QUICK TEMPLATES</label>
+      <div id="cf-templates" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+    </div>
+
+    <div class="fgroup">
+      <label class="flabel">PACKS (add multiple at once)</label>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <button type="button" class="btn-ghost" onclick="applyFieldPack('p1')">+ PLAYER 1 NAME+UID</button>
+        <button type="button" class="btn-ghost" onclick="applyFieldPack('p2')">+ PLAYER 2 NAME+UID</button>
+        <button type="button" class="btn-ghost" onclick="applyFieldPack('p3')">+ PLAYER 3 NAME+UID</button>
+        <button type="button" class="btn-ghost" onclick="applyFieldPack('p4')">+ PLAYER 4 NAME+UID</button>
+        <button type="button" class="btn-ghost" onclick="applyFieldPack('core')">+ TEAM CORE (Guild + IGL)</button>
+        <button type="button" class="btn-ghost" onclick="applyFieldPack('squad4')">+ FULL 4-PLAYER SQUAD</button>
+      </div>
+    </div>
+
+    <div style="height:1px;background:var(--border);margin:8px 0 14px;"></div>
+
+    <div class="fgroup">
+      <label class="flabel">INPUT TYPE</label>
+      <select class="finput" id="cf-type" onchange="onCustomTypeChange()">
+        <option value="text">KEYBOARD — Text</option>
+        <option value="number">NUMPAD — Number</option>
+        <option value="email">GMAIL — Email</option>
+        <option value="tel">PHONE — Mobile number</option>
+        <option value="textarea">LONG TEXT — Paragraph</option>
+        <option value="url">URL — Link</option>
+      </select>
+    </div>
+    <div class="fgroup">
+      <label class="flabel">FIELD LABEL (shown to player)</label>
+      <input type="text" class="finput" id="cf-label" placeholder="e.g. IGL WhatsApp / UID / Team Code"/>
+    </div>
+    <div class="fgroup">
+      <label class="flabel">INPUT PLACEHOLDER</label>
+      <input type="text" class="finput" id="cf-placeholder" placeholder="Hint text inside the empty field"/>
+    </div>
+    <div class="fgroup" style="display:flex;align-items:center;justify-content:space-between;">
+      <label class="flabel" style="margin:0;">REQUIRED FIELD</label>
+      <label class="switch"><input type="checkbox" id="cf-required" checked/><span class="slider"></span></label>
+    </div>
+    <div style="background:var(--gray);border-radius:8px;padding:12px;margin-bottom:14px;">
+      <div style="font-family:'Orbitron',sans-serif;font-size:8px;color:var(--text2);letter-spacing:1px;margin-bottom:6px;">PREVIEW</div>
+      <div id="cf-preview-label" style="font-family:'Orbitron',sans-serif;font-size:10px;font-weight:700;margin-bottom:6px;color:var(--black);">Field label</div>
+      <input id="cf-preview-input" class="finput" type="text" placeholder="Placeholder" disabled style="margin:0;opacity:0.85;"/>
+    </div>
+    <button class="btn-blue" onclick="addCustomField()">ADD TO MATCH FORM</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+import { getAuth, signInAnonymously, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
+import { getFirestore, collection, getDocs, getDoc, setDoc, updateDoc, deleteDoc, doc, query, orderBy, where, addDoc, serverTimestamp, writeBatch } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDrg8CHeOGiPR9kFLSTreRbP4p8TGF9jMY",
+  authDomain: "nothumans-7e285.firebaseapp.com",
+  projectId: "nothumans-7e285",
+  storageBucket: "nothumans-7e285.firebasestorage.app",
+  messagingSenderId: "409725804600",
+  appId: "1:409725804600:web:ec0344bf1ac49a55edc6cd"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const IMGBB_KEY = '405018efab5e2bd5e75f4dd0040a41c3';
+const DEFAULT_WA_GROUP = 'https://chat.whatsapp.com/Bvywn4d4G0zGNfWjp2ulRK';
+const DEFAULT_WA_CHANNEL = 'https://whatsapp.com/channel/0029VbCV7TqLo4hlM05Vn53h';
+const DEFAULT_DISCORD = 'https://discord.gg/7hNSDmKGFG';
+const GAS_MAIL_SECRET = 'NH_MAIL_2026';
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/* ── ADMIN PASSKEY (SHA-256 in Firestore + Anonymous Auth) ──
+   Hash lives at settings/adminAuth.passkeyHash
+   Default plaintext (first run only): NH_ADMIN_2026
+   Enable Anonymous sign-in: Firebase Console → Authentication → Sign-in method
+*/
+const DEFAULT_ADMIN_PASSKEY = 'NH_ADMIN_2026';
+const PASSKEY_FLAG = 'nh_admin_passkey_ok'; // localStorage — survives browser restart (auto-login)
+const ADMIN_AUTH_DOC = () => doc(db, 'settings', 'adminAuth');
+let unlockInProgress = false; // prevents onAuthStateChanged from signing out mid-login
+
+async function sha256Hex(str){
+  const data = new TextEncoder().encode(String(str));
+  const buf = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function getStoredPasskeyHash(){
+  const snap = await getDoc(ADMIN_AUTH_DOC());
+  if(snap.exists() && snap.data().passkeyHash){
+    return String(snap.data().passkeyHash).toLowerCase();
+  }
+  return null;
+}
+
+async function ensurePasskeyHashSeeded(plaintextIfFirst){
+  let hash = await getStoredPasskeyHash();
+  if(hash) return hash;
+  // First-time: seed Firestore with SHA-256 of default (or provided) passkey
+  const seed = plaintextIfFirst || DEFAULT_ADMIN_PASSKEY;
+  hash = await sha256Hex(seed);
+  await setDoc(ADMIN_AUTH_DOC(), {
+    passkeyHash: hash,
+    updatedAt: serverTimestamp(),
+    algo: 'SHA-256'
+  }, { merge: true });
+  return hash;
+}
+
+let allMatches = [];
+let allRegs = [];
+let orphanedSlots = [];
+let manualSlotList = [];
+let selectedManualSlotIds = new Set();
+let currentRegDocId = null;
+let customFields = []; // {id, type, label, placeholder, required}
+
+let sidebarLinks = []; // {name, url}
+
+function renderSidebarLinksEditor(){
+  const box = document.getElementById('sidebar-links-editor');
+  const empty = document.getElementById('sidebar-links-empty');
+  if(!box) return;
+  box.innerHTML = '';
+  if(!sidebarLinks.length){
+    if(empty) empty.style.display = 'block';
+    return;
+  }
+  if(empty) empty.style.display = 'none';
+  sidebarLinks.forEach((l, i) => {
+    const row = document.createElement('div');
+    row.className = 'field-row';
+    row.style.cssText = 'background:var(--gray);border:1.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;';
+    row.innerHTML = `
+      <div class="field-row-top">
+        <label class="flabel">LINK ${i+1}</label>
+        <button type="button" class="btn-red" onclick="removeSidebarLink(${i})">REMOVE</button>
+      </div>
+      <div class="fgrid">
+        <div class="fgroup" style="margin:0;">
+          <label class="flabel">NAME (placeholder label)</label>
+          <input type="text" class="finput" data-sb="name" data-i="${i}" value="${String(l.name||'').replace(/"/g,'&quot;')}" placeholder="e.g. Instagram" oninput="updateSidebarLink(${i},'name',this.value)"/>
+        </div>
+        <div class="fgroup" style="margin:0;">
+          <label class="flabel">URL / LINK</label>
+          <input type="text" class="finput" data-sb="url" data-i="${i}" value="${String(l.url||'').replace(/"/g,'&quot;')}" placeholder="https://…" oninput="updateSidebarLink(${i},'url',this.value)"/>
+        </div>
+      </div>`;
+    box.appendChild(row);
+  });
+}
+window.addSidebarLinkRow = () => {
+  if(sidebarLinks.length >= 7){ showToast('MAX 7 SIDEBAR LINKS'); return; }
+  sidebarLinks.push({ name: '', url: '' });
+  renderSidebarLinksEditor();
+};
+window.removeSidebarLink = (i) => {
+  sidebarLinks.splice(i, 1);
+  renderSidebarLinksEditor();
+};
+window.updateSidebarLink = (i, key, val) => {
+  if(!sidebarLinks[i]) return;
+  sidebarLinks[i][key] = val;
+};
+
+
+
+/* PUBLIC RULES MANAGER */
+let rulesPage={title:'NH MAC TT RULES',subtitle:'Official tournament rules. Read every rule before registering.',sections:[]};
+const DEFAULT_RULES_PAGE={title:'NH MAC TT RULES',subtitle:'Official tournament rules. Read every rule before registering.',sections:[{title:'TOURNAMENT RULES',items:['Total Teams: 32','3 League Matches Per Team','WIN = 2 POINTS · LOSS = 0 POINTS','Top 16 Qualify For League Stage 2']} ]};
+function renderRulesEditor(){const box=document.getElementById('rules-editor'),empty=document.getElementById('rules-empty');if(!box)return;box.innerHTML='';if(!rulesPage.sections.length){if(empty)empty.style.display='block';return}if(empty)empty.style.display='none';rulesPage.sections.forEach((sec,i)=>{const row=document.createElement('div');row.style.cssText='background:var(--gray);border:1.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px;';row.innerHTML=`<div class="field-row-top"><label class="flabel">SECTION ${i+1}</label><button type="button" class="btn-red" onclick="removeRuleSection(${i})">REMOVE</button></div><div class="fgroup"><label class="flabel">SECTION TITLE</label><input type="text" class="finput" value="${String(sec.title||'').replace(/"/g,'&quot;')}" oninput="updateRuleSection(${i},'title',this.value)"></div><div class="fgroup" style="margin-bottom:0"><label class="flabel">RULES — ONE RULE PER LINE</label><textarea class="finput" rows="7" style="resize:vertical;min-height:120px;line-height:1.5" oninput="updateRuleSection(${i},'itemsText',this.value)">${String(sec.itemsText??(sec.items||[]).join('\n')).replace(/</g,'&lt;')}</textarea></div>`;box.appendChild(row)})}
+window.addRuleSection=()=>{rulesPage.sections.push({title:'NEW SECTION',itemsText:'New rule'});renderRulesEditor()};window.removeRuleSection=i=>{rulesPage.sections.splice(i,1);renderRulesEditor()};window.updateRuleSection=(i,k,v)=>{if(rulesPage.sections[i])rulesPage.sections[i][k]=v};
+window.saveRulesPage=async()=>{const clean={title:String(rulesPage.title||'NH MAC TT RULES').trim(),subtitle:String(rulesPage.subtitle||'').trim(),sections:rulesPage.sections.map(s=>({title:String(s.title||'').trim(),items:String(s.itemsText??(s.items||[]).join('\n')).split(/\r?\n/).map(x=>x.trim()).filter(Boolean)})).filter(s=>s.title||s.items.length)};try{await setDoc(doc(db,'settings','global'),{rulesPage:clean},{merge:true});rulesPage={...clean,sections:clean.sections.map(s=>({title:s.title,items:s.items.slice(),itemsText:s.items.join('\n')}))};renderRulesEditor();showToast('RULES SAVED')}catch(e){console.error(e);showToast('ERROR SAVING RULES')}};
+
+const DEFAULT_DISPLAY_FIELDS = ['image','title','subtitle','date','mode','prize','slots','progress','visitBtn'];
+
+function getDisplayFieldsFromUI(){
+  const out = [];
+  document.querySelectorAll('#tab-add-match input[data-df]').forEach(cb => {
+    if(cb.checked) out.push(cb.getAttribute('data-df'));
+  });
+  return out;
+}
+function setDisplayFieldsUI(arr){
+  const set = new Set(Array.isArray(arr) && arr.length ? arr : DEFAULT_DISPLAY_FIELDS);
+  document.querySelectorAll('#tab-add-match input[data-df]').forEach(cb => {
+    cb.checked = set.has(cb.getAttribute('data-df'));
+  });
+}
+
+
+
+
+function showApp(){
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('login-method-badge').textContent = 'Passkey · Anon';
+  loadAll();
+}
+function showLogin(){
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+}
+
+onAuthStateChanged(auth, async (user) => {
+  // Auto-login: Firebase restores anonymous session + localStorage remembers passkey unlock
+  if(user && user.isAnonymous && localStorage.getItem(PASSKEY_FLAG) === '1'){
+    showApp();
+    return;
+  }
+  // While unlock is in progress, do NOT sign out — wait for passkey check to finish
+  if(user && user.isAnonymous && unlockInProgress){
+    return;
+  }
+  // Anonymous session without remembered unlock — sign out so login screen is clean
+  if(user && user.isAnonymous && localStorage.getItem(PASSKEY_FLAG) !== '1'){
+    try { await signOut(auth); } catch(_){}
+  }
+  showLogin();
+});
+
+window.doPasskeyLogin = async () => {
+  const err = document.getElementById('login-err');
+  const btn = document.getElementById('login-btn');
+  err.style.display = 'none';
+  const entered = (document.getElementById('l-passkey').value || '').trim();
+  if(!entered){
+    err.textContent = 'ENTER PASSKEY';
+    err.style.display = 'block';
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = 'UNLOCKING…';
+  unlockInProgress = true;
+  try {
+    // 1) Sign in anonymously FIRST (required for write rules)
+    if(!auth.currentUser){
+      await signInAnonymously(auth);
+    }
+    // Small wait so auth token is attached to Firestore requests
+    await auth.currentUser.getIdToken(true);
+
+    // 2) Read / seed passkey hash
+    let storedHash = await getStoredPasskeyHash();
+    if(!storedHash){
+      // First run: only default passkey is accepted, then hash is written to Firestore
+      if(entered !== DEFAULT_ADMIN_PASSKEY){
+        throw Object.assign(new Error('INVALID PASSKEY'), { code: 'passkey' });
+      }
+      storedHash = await ensurePasskeyHashSeeded(DEFAULT_ADMIN_PASSKEY);
+    } else {
+      const enteredHash = await sha256Hex(entered);
+      if(enteredHash !== storedHash){
+        throw Object.assign(new Error('INVALID PASSKEY'), { code: 'passkey' });
+      }
+    }
+    // 3) Remember unlock on this device → auto-login next visit
+    localStorage.setItem(PASSKEY_FLAG, '1');
+    unlockInProgress = false;
+    showApp();
+  } catch(ex){
+    console.error(ex);
+    unlockInProgress = false;
+    localStorage.removeItem(PASSKEY_FLAG);
+    try { await signOut(auth); } catch(_){}
+    const code = ex && (ex.code || '');
+    if(code === 'passkey'){
+      err.textContent = 'INVALID PASSKEY';
+    } else if(String(code).startsWith('auth/')){
+      err.textContent = 'AUTH FAILED — ENABLE ANONYMOUS IN FIREBASE CONSOLE';
+    } else if(code === 'permission-denied' || /permission|insufficient|missing/i.test(String(ex.message||''))){
+      err.textContent = 'PERMISSION DENIED — CHECK FIRESTORE RULES FOR settings/*';
+    } else {
+      err.textContent = (ex && ex.message) ? String(ex.message).toUpperCase() : 'LOGIN FAILED';
+    }
+    err.style.display = 'block';
+    document.getElementById('l-passkey').value = '';
+    btn.disabled = false;
+    btn.textContent = 'UNLOCK ADMIN PANEL';
+  }
+};
+
+window.doLogout = async () => {
+  unlockInProgress = false;
+  localStorage.removeItem(PASSKEY_FLAG);
+  try { await signOut(auth); } catch(_){}
+  location.reload();
+};
+
+window.changeAdminPasskey = async () => {
+  const btn = document.getElementById('pk-change-btn');
+  const cur = (document.getElementById('pk-current').value || '').trim();
+  const neu = (document.getElementById('pk-new').value || '').trim();
+  const conf = (document.getElementById('pk-confirm').value || '').trim();
+  if(!cur || !neu || !conf){ showToast('FILL ALL PASSKEY FIELDS'); return; }
+  if(neu.length < 6){ showToast('NEW PASSKEY MIN 6 CHARS'); return; }
+  if(neu !== conf){ showToast('NEW PASSKEYS DO NOT MATCH'); return; }
+  if(!auth.currentUser){ showToast('NOT LOGGED IN'); return; }
+  btn.disabled = true;
+  btn.textContent = 'UPDATING…';
+  try {
+    let storedHash = await getStoredPasskeyHash();
+    if(!storedHash){
+      storedHash = await ensurePasskeyHashSeeded(DEFAULT_ADMIN_PASSKEY);
+    }
+    const curHash = await sha256Hex(cur);
+    if(curHash !== storedHash){
+      showToast('CURRENT PASSKEY WRONG');
+      btn.disabled = false;
+      btn.textContent = 'CHANGE PASSKEY';
+      return;
+    }
+    const newHash = await sha256Hex(neu);
+    await setDoc(ADMIN_AUTH_DOC(), {
+      passkeyHash: newHash,
+      updatedAt: serverTimestamp(),
+      algo: 'SHA-256'
+    }, { merge: true });
+    document.getElementById('pk-current').value = '';
+    document.getElementById('pk-new').value = '';
+    document.getElementById('pk-confirm').value = '';
+    // Stay logged in on this device
+    localStorage.setItem(PASSKEY_FLAG, '1');
+    showToast('PASSKEY UPDATED');
+  } catch(e){
+    console.error(e);
+    showToast('ERROR UPDATING PASSKEY');
+  }
+  btn.disabled = false;
+  btn.textContent = 'CHANGE PASSKEY';
+};
+
+async function loadAll(){
+  await loadMatches();
+  await loadRegistrations();
+  await loadHeroSettings();
+  await loadSettings();
+  await loadAnnouncements();
+}
+
+window.switchTab = (tab, el) => {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  el.classList.add('active');
+  if(tab === 'announcements') loadAnnouncements();
+  if(tab === 'storage') loadStorageStats();
+  if(tab === 'slots') loadSlotManager();
+  if(tab === 'fs-settings') loadFreeSlotSettings();
+  if(tab === 'fs-teams') loadFreeSlotTeams();
+};
+
+window.uploadImg = async (file, urlId, prevId, progId) => {
+  if(!file) return;
+  const prog = document.getElementById(progId);
+  const txtId = progId.replace('-prog', '-txt');
+  prog.classList.add('show');
+  document.getElementById(txtId).textContent = 'UPLOADING...';
+  const reader = new FileReader();
+  reader.onload = e => { const prev = document.getElementById(prevId); prev.src = e.target.result; prev.style.display = 'block'; };
+  reader.readAsDataURL(file);
+  try {
+    const fd = new FormData(); fd.append('image', file);
+    const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, { method: 'POST', body: fd });
+    const json = await res.json();
+    if(json.success){
+      document.getElementById(urlId).value = json.data.url;
+      document.getElementById(txtId).textContent = 'UPLOADED';
+      setTimeout(() => prog.classList.remove('show'), 1200);
+    } else throw new Error('upload failed');
+  } catch(e){
+    document.getElementById(txtId).textContent = 'FAILED';
+    showToast('IMAGE UPLOAD FAILED');
+  }
+};
+window.handleImgDrop = (e, urlId, prevId, progId) => {
+  e.preventDefault(); e.currentTarget.classList.remove('over');
+  const file = e.dataTransfer.files[0];
+  if(file) uploadImg(file, urlId, prevId, progId);
+};
+
+/** ImgBB upload for announcement image blocks */
+window.uploadAnnBlockImage = async (blockId, file) => {
+  if(!file || !blockId) return;
+  const progId = 'ann-img-prog-' + blockId;
+  const prevId = 'ann-img-prev-' + blockId;
+  const prog = document.getElementById(progId);
+  const txt = document.getElementById(progId + '-txt');
+  if(prog) prog.classList.add('show');
+  if(txt) txt.textContent = 'UPLOADING…';
+  // local preview immediately
+  const reader = new FileReader();
+  reader.onload = e => {
+    const prev = document.getElementById(prevId);
+    if(prev){ prev.src = e.target.result; prev.style.display = 'block'; }
+  };
+  reader.readAsDataURL(file);
+  try {
+    const fd = new FormData();
+    fd.append('image', file);
+    const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, { method: 'POST', body: fd });
+    const json = await res.json();
+    if(!json.success) throw new Error('upload failed');
+    const url = json.data.url;
+    updateAnnBlock(blockId, 'url', url);
+    const hidden = document.getElementById('ann-img-url-' + blockId);
+    if(hidden) hidden.value = url;
+    // also update any visible URL text input inside the card
+    const card = document.querySelector(`[data-block-id="${blockId}"]`);
+    if(card){
+      const urlInput = card.querySelector('input.finput[placeholder="Or paste image URL"]');
+      if(urlInput) urlInput.value = url;
+    }
+    if(txt) txt.textContent = 'UPLOADED';
+    setTimeout(() => { if(prog) prog.classList.remove('show'); }, 1200);
+    renderAnnLivePreview();
+    showToast('IMAGE UPLOADED');
+  } catch(e){
+    console.error(e);
+    if(txt) txt.textContent = 'FAILED';
+    showToast('IMAGE UPLOAD FAILED');
+  }
+};
+
+window.handleModeChange = () => {
+  const v = document.getElementById('m-mode-select').value;
+  document.getElementById('m-mode-custom').style.display = v === 'other' ? 'block' : 'none';
+};
+
+window.loadMatches = async () => {
+  const list = document.getElementById('matches-list');
+  list.innerHTML = '<div style="text-align:center;padding:20px;font-family:Orbitron,sans-serif;font-size:10px;color:var(--text2);">LOADING...</div>';
+  try {
+    const snap = await getDocs(query(collection(db, 'matches'), orderBy('createdAt', 'desc')));
+    allMatches = [];
+    snap.forEach(d => allMatches.push({ id: d.id, ...d.data() }));
+    document.getElementById('stat-matches').textContent = allMatches.length;
+    const filter = document.getElementById('reg-match-filter');
+    filter.innerHTML = '<option value="all">ALL MATCHES</option>' + allMatches.map(m => `<option value="${m.id}">${m.name||m.id}</option>`).join('');
+    if(!allMatches.length){
+      list.innerHTML = '<div style="text-align:center;padding:24px;font-family:Orbitron,sans-serif;font-size:10px;color:var(--text2);">NO MATCHES YET</div>';
+      return;
+    }
+    list.innerHTML = allMatches.map(m => `
+      <div class="match-item">
+        <span class="status-dot ${m.status||'open'}"></span>
+        ${m.image ? `<img class="match-thumb" src="${m.image}" alt=""/>` : `<div class="match-thumb"></div>`}
+        <div class="match-info">
+          <div class="match-name">${m.name||'—'}</div>
+          <div class="match-meta">${m.mode||''} · ${m.time||''} · ${(m.matchType==='free' || Number(m.entry)===0) ? 'FREE' : ('₹'+(m.entry||0))} · ${m.slots||0} slots</div>
+        </div>
+        <div class="match-actions">
+          <button class="btn-ghost" onclick="editMatch('${m.id}')">EDIT</button>
+          <button class="btn-red" onclick="deleteMatch('${m.id}')">DEL</button>
+        </div>
+      </div>`).join('');
+  } catch(e){ list.innerHTML = '<div style="color:#cc0000;padding:20px;text-align:center;font-family:Orbitron,sans-serif;font-size:10px;">ERROR LOADING</div>'; }
+};
+
+window.editMatch = (id) => {
+  const m = allMatches.find(x => x.id === id); if(!m) return;
+  document.getElementById('edit-match-id').value = id;
+  document.getElementById('form-title').textContent = 'EDIT MATCH';
+  document.getElementById('m-name').value = m.name || '';
+  document.getElementById('m-subtitle').value = m.subtitle || '';
+  document.getElementById('m-time').value = m.time || '';
+  document.getElementById('m-slots').value = m.slots || '';
+  document.getElementById('m-entry').value = m.entry || '';
+  document.getElementById('m-prize').value = m.prize || '';
+  document.getElementById('m-bounty').value = m.bounty || '';
+  document.getElementById('m-status').value = m.status || 'open';
+  document.getElementById('m-winner').value = m.winner || '';
+  document.getElementById('m-winner-sub').value = m.winnerSub || '';
+  document.getElementById('match-img-url').value = m.image || '';
+  if(m.image){ const p = document.getElementById('match-dz-prev'); p.src = m.image; p.style.display = 'block'; }
+  const modes = ['4v4','2v2','1v1','BR · SQUAD'];
+  if(modes.includes(m.mode)){ document.getElementById('m-mode-select').value = m.mode; document.getElementById('m-mode-custom').style.display = 'none'; }
+  else { document.getElementById('m-mode-select').value = 'other'; document.getElementById('m-mode-custom').style.display = 'block'; document.getElementById('m-mode-custom').value = m.mode || ''; }
+  document.getElementById('m-slot-open-enabled').checked = !!m.slotOpenEnabled;
+  if(m.slotOpenAt){
+    try {
+      const d = new Date(m.slotOpenAt);
+      document.getElementById('m-slot-open-at').value = d.toISOString().slice(0,16);
+    } catch(_){}
+  }
+  customFields = Array.isArray(m.customFields) ? m.customFields.map(f => ({...f})) : [];
+  renderCustomFieldsList();
+  setDisplayFieldsUI(m.displayFields);
+  // restore paid/free type
+  const isFree = m.matchType === 'free' || (m.matchType !== 'paid' && Number(m.entry) === 0 && m.entry !== undefined && m.entry !== '');
+  setMatchType(isFree ? 'free' : 'paid');
+  if(!isFree) document.getElementById('m-entry').value = m.entry || '';
+  document.getElementById('cancel-edit-btn').style.display = 'block';
+  document.getElementById('save-match-btn').textContent = 'UPDATE MATCH';
+  switchTab('add-match', document.querySelectorAll('.tab')[1]);
+};
+
+window.cancelEdit = () => {
+  document.getElementById('edit-match-id').value = '';
+  document.getElementById('form-title').textContent = 'CREATE NEW MATCH';
+  document.getElementById('save-match-btn').textContent = 'PUBLISH MATCH';
+  document.getElementById('cancel-edit-btn').style.display = 'none';
+  ['m-name','m-subtitle','m-time','m-slots','m-entry','m-prize','m-bounty','m-winner','m-winner-sub','match-img-url','m-mode-custom'].forEach(id => document.getElementById(id).value = '');
+  setDisplayFieldsUI(DEFAULT_DISPLAY_FIELDS);
+  document.getElementById('match-dz-prev').style.display = 'none';
+  document.getElementById('m-status').value = 'open';
+  document.getElementById('m-slot-open-enabled').checked = false;
+  document.getElementById('m-slot-open-at').value = '';
+  customFields = [];
+  renderCustomFieldsList();
+  setMatchType('paid');
+};
+
+
+const CF_TYPE_META = {
+  text:     { label: 'KEYBOARD',  input: 'text',     hint: 'Any text' },
+  number:   { label: 'NUMPAD',    input: 'number',   hint: 'Numbers only' },
+  email:    { label: 'GMAIL',     input: 'email',    hint: 'name@email.com' },
+  tel:      { label: 'PHONE',     input: 'tel',      hint: '91XXXXXXXXXX' },
+  textarea: { label: 'LONG TEXT', input: 'textarea', hint: 'Long answer…' },
+  url:      { label: 'URL',       input: 'url',      hint: 'https://…' }
+};
+
+function renderCustomFieldsList(){
+  const list = document.getElementById('custom-fields-list');
+  const empty = document.getElementById('custom-fields-empty');
+  if(!list) return;
+  list.querySelectorAll('.cf-row').forEach(n => n.remove());
+  if(!customFields.length){
+    if(empty) empty.style.display = 'block';
+    return;
+  }
+  if(empty) empty.style.display = 'none';
+  customFields.forEach((f, idx) => {
+    const meta = CF_TYPE_META[f.type] || CF_TYPE_META.text;
+    const row = document.createElement('div');
+    row.className = 'cf-row';
+    row.innerHTML = `
+      <div class="cf-info">
+        <div class="cf-name">${f.label}</div>
+        <div class="cf-meta">${meta.label} · ${f.required ? 'REQUIRED' : 'OPTIONAL'} · placeholder: “${(f.placeholder||'').replace(/"/g,'&quot;')}”</div>
+      </div>
+      <button type="button" class="btn-red" onclick="removeCustomField(${idx})">REMOVE</button>
+    `;
+    list.appendChild(row);
+  });
+}
+
+/* ── Registration input templates ── */
+const FIELD_TEMPLATES = [
+  { id: 'p1_name',  label: 'PLAYER 1 NAME',  type: 'text',  placeholder: 'Player 1 in-game name', required: true },
+  { id: 'p1_uid',   label: 'PLAYER 1 UID',   type: 'text',  placeholder: 'Player 1 game UID', required: true },
+  { id: 'p2_name',  label: 'PLAYER 2 NAME',  type: 'text',  placeholder: 'Player 2 in-game name', required: true },
+  { id: 'p2_uid',   label: 'PLAYER 2 UID',   type: 'text',  placeholder: 'Player 2 game UID', required: true },
+  { id: 'p3_name',  label: 'PLAYER 3 NAME',  type: 'text',  placeholder: 'Player 3 in-game name', required: true },
+  { id: 'p3_uid',   label: 'PLAYER 3 UID',   type: 'text',  placeholder: 'Player 3 game UID', required: true },
+  { id: 'p4_name',  label: 'PLAYER 4 NAME',  type: 'text',  placeholder: 'Player 4 in-game name', required: true },
+  { id: 'p4_uid',   label: 'PLAYER 4 UID',   type: 'text',  placeholder: 'Player 4 game UID', required: true },
+  { id: 'igl',      label: 'IGL CONTACT',    type: 'tel',   placeholder: 'WhatsApp / phone number', required: true },
+  { id: 'guild',    label: 'GUILD NAME',     type: 'text',  placeholder: 'Clan / guild name', required: false },
+  { id: 'team',     label: 'TEAM NAME',      type: 'text',  placeholder: 'Squad / team name', required: true },
+  { id: 'whatsapp', label: 'WHATSAPP NUMBER',type: 'tel',   placeholder: '91XXXXXXXXXX', required: true },
+  { id: 'email',    label: 'EMAIL',          type: 'email', placeholder: 'name@email.com', required: false },
+  { id: 'invite',   label: 'INVITE / TEAM CODE', type: 'text', placeholder: 'Invite or team code', required: false }
+];
+
+const FIELD_PACKS = {
+  p1: ['p1_name', 'p1_uid'],
+  p2: ['p2_name', 'p2_uid'],
+  p3: ['p3_name', 'p3_uid'],
+  p4: ['p4_name', 'p4_uid'],
+  core: ['team', 'guild', 'igl'],
+  squad4: ['p1_name','p1_uid','p2_name','p2_uid','p3_name','p3_uid','p4_name','p4_uid']
+};
+
+function renderFieldTemplates(){
+  const box = document.getElementById('cf-templates');
+  if(!box) return;
+  box.innerHTML = FIELD_TEMPLATES.map(t =>
+    `<button type="button" class="block-chip" style="cursor:pointer;" onclick="applyFieldTemplate('${t.id}')">${t.label}</button>`
+  ).join('');
+}
+
+window.applyFieldTemplate = (tid) => {
+  const t = FIELD_TEMPLATES.find(x => x.id === tid);
+  if(!t) return;
+  document.getElementById('cf-type').value = t.type;
+  document.getElementById('cf-label').value = t.label;
+  document.getElementById('cf-placeholder').value = t.placeholder;
+  document.getElementById('cf-required').checked = !!t.required;
+  onCustomTypeChange();
+  showToast('TEMPLATE LOADED — TAP ADD');
+};
+
+function pushCustomField(def){
+  customFields.push({
+    id: 'cf_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+    type: def.type || 'text',
+    label: def.label,
+    placeholder: def.placeholder || '',
+    required: !!def.required
+  });
+}
+
+window.applyFieldPack = (packId) => {
+  const ids = FIELD_PACKS[packId];
+  if(!ids) return;
+  let added = 0;
+  ids.forEach(tid => {
+    const t = FIELD_TEMPLATES.find(x => x.id === tid);
+    if(!t) return;
+    // skip if same label already exists
+    if(customFields.some(f => (f.label||'').toUpperCase() === t.label.toUpperCase())) return;
+    pushCustomField(t);
+    added++;
+  });
+  renderCustomFieldsList();
+  closeCustomFieldModal();
+  showToast(added ? `${added} FIELDS ADDED` : 'ALREADY ADDED');
+};
+
+window.openCustomFieldModal = () => {
+  document.getElementById('cf-type').value = 'text';
+  document.getElementById('cf-label').value = '';
+  document.getElementById('cf-placeholder').value = '';
+  document.getElementById('cf-required').checked = true;
+  renderFieldTemplates();
+  onCustomTypeChange();
+  document.getElementById('custom-field-modal').classList.add('open');
+  setTimeout(() => document.getElementById('cf-label').focus(), 80);
+};
+window.closeCustomFieldModal = () => document.getElementById('custom-field-modal').classList.remove('open');
+
+window.onCustomTypeChange = () => {
+  const type = document.getElementById('cf-type').value;
+  const meta = CF_TYPE_META[type] || CF_TYPE_META.text;
+  const ph = document.getElementById('cf-placeholder');
+  if(!ph.value.trim()) ph.placeholder = meta.hint;
+  // live preview
+  const label = document.getElementById('cf-label').value.trim() || 'Field label';
+  document.getElementById('cf-preview-label').textContent = label + (document.getElementById('cf-required').checked ? ' *' : '');
+  const prev = document.getElementById('cf-preview-input');
+  // swap input/textarea for preview
+  const wrap = prev.parentNode;
+  const newEl = document.createElement(meta.input === 'textarea' ? 'textarea' : 'input');
+  newEl.id = 'cf-preview-input';
+  newEl.className = 'finput';
+  newEl.disabled = true;
+  newEl.style.cssText = 'margin:0;opacity:0.85;' + (meta.input === 'textarea' ? 'min-height:64px;resize:none;' : '');
+  if(meta.input !== 'textarea') newEl.type = meta.input;
+  newEl.placeholder = ph.value.trim() || meta.hint;
+  prev.replaceWith(newEl);
+};
+
+// live update preview when typing
+document.addEventListener('input', (e) => {
+  if(e.target && (e.target.id === 'cf-label' || e.target.id === 'cf-placeholder' || e.target.id === 'cf-required')){
+    if(document.getElementById('custom-field-modal')?.classList.contains('open')) onCustomTypeChange();
+  }
+});
+document.addEventListener('change', (e) => {
+  if(e.target && e.target.id === 'cf-required'){
+    if(document.getElementById('custom-field-modal')?.classList.contains('open')) onCustomTypeChange();
+  }
+});
+
+window.addCustomField = () => {
+  const type = document.getElementById('cf-type').value;
+  const label = document.getElementById('cf-label').value.trim();
+  const placeholder = document.getElementById('cf-placeholder').value.trim();
+  const required = document.getElementById('cf-required').checked;
+  if(!label){ showToast('ENTER FIELD LABEL'); return; }
+  customFields.push({
+    id: 'cf_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+    type,
+    label,
+    placeholder: placeholder || (CF_TYPE_META[type]?.hint || ''),
+    required
+  });
+  renderCustomFieldsList();
+  closeCustomFieldModal();
+  showToast('CUSTOM INPUT ADDED');
+};
+
+window.removeCustomField = (idx) => {
+  customFields.splice(idx, 1);
+  renderCustomFieldsList();
+};
+
+
+window.setMatchType = (type) => {
+  const isFree = type === 'free';
+  document.getElementById('type-opt-paid').classList.toggle('active', !isFree);
+  document.getElementById('type-opt-free').classList.toggle('active', isFree);
+  const paidRadio = document.querySelector('input[name="match-type"][value="paid"]');
+  const freeRadio = document.querySelector('input[name="match-type"][value="free"]');
+  if(paidRadio) paidRadio.checked = !isFree;
+  if(freeRadio) freeRadio.checked = isFree;
+
+  const entryWrap = document.getElementById('entry-field-wrap');
+  const slotsLabel = document.getElementById('m-slots-label');
+  const slotsNote = document.getElementById('m-slots-note');
+  const entryNote = document.getElementById('m-entry-note');
+  const entryInput = document.getElementById('m-entry');
+  const dfEntry = document.getElementById('df-entry');
+
+  if(isFree){
+    if(entryWrap) entryWrap.classList.add('field-disabled');
+    if(entryInput){ entryInput.value = '0'; entryInput.placeholder = '0 (FREE)'; }
+    if(dfEntry) dfEntry.checked = false; // hide entry on public for free
+    if(slotsLabel) slotsLabel.textContent = 'MAX SLOTS (CONFIRM LIMIT)';
+    if(slotsNote) slotsNote.textContent = 'Free tournament — set how many slots can be confirmed';
+    if(entryNote) entryNote.textContent = 'Free tournament — entry is ₹0';
+  } else {
+    if(entryWrap) entryWrap.classList.remove('field-disabled');
+    if(entryInput){ entryInput.placeholder = '50'; if(entryInput.value === '0') entryInput.value = ''; }
+    if(slotsLabel) slotsLabel.textContent = 'TOTAL SLOTS';
+    if(slotsNote) slotsNote.textContent = 'How many teams can join this match';
+    if(entryNote) entryNote.textContent = 'Players pay this to register';
+  }
+};
+
+window.saveMatch = async () => {
+  const editId = document.getElementById('edit-match-id').value;
+  const modeSel = document.getElementById('m-mode-select').value;
+  const mode = modeSel === 'other' ? document.getElementById('m-mode-custom').value.trim() : modeSel;
+  const isFree = document.querySelector('input[name="match-type"]:checked')?.value === 'free';
+  const entryVal = isFree ? 0 : (parseInt(document.getElementById('m-entry').value) || 0);
+  let displayFields = getDisplayFieldsFromUI();
+  if(isFree){
+    // free matches never show entry fee publicly
+    displayFields = displayFields.filter(f => f !== 'entry');
+  }
+  const data = {
+    name: document.getElementById('m-name').value.trim(),
+    subtitle: document.getElementById('m-subtitle').value.trim(),
+    time: document.getElementById('m-time').value.trim(),
+    mode,
+    matchType: isFree ? 'free' : 'paid',
+    slots: parseInt(document.getElementById('m-slots').value) || 12,
+    entry: entryVal,
+    prize: document.getElementById('m-prize').value.trim(),
+    bounty: isFree ? 0 : (parseInt(document.getElementById('m-bounty').value) || 0),
+    status: document.getElementById('m-status').value,
+    winner: document.getElementById('m-winner').value.trim(),
+    winnerSub: document.getElementById('m-winner-sub').value.trim(),
+    image: document.getElementById('match-img-url').value.trim(),
+    slotOpenEnabled: document.getElementById('m-slot-open-enabled').checked,
+    slotOpenAt: document.getElementById('m-slot-open-at').value ? new Date(document.getElementById('m-slot-open-at').value).toISOString() : null,
+    customFields: customFields.map(f => ({
+      id: f.id,
+      type: f.type,
+      label: f.label,
+      placeholder: f.placeholder || '',
+      required: !!f.required
+    })),
+    displayFields
+  };
+  if(!data.name){ showToast('ENTER MATCH NAME'); return; }
+  if(!data.slots || data.slots < 1){ showToast('SET MAX SLOTS'); return; }
+  try {
+    if(editId){
+      await updateDoc(doc(db, 'matches', editId), data);
+      showToast('MATCH UPDATED');
+    } else {
+      data.createdAt = serverTimestamp();
+      await addDoc(collection(db, 'matches'), data);
+      showToast(isFree ? 'FREE MATCH PUBLISHED' : 'PAID MATCH PUBLISHED');
+    }
+    cancelEdit();
+    await loadMatches();
+  } catch(e){ console.error(e); showToast('ERROR SAVING MATCH'); }
+};
+
+window.deleteMatch = async (id) => {
+  if(!confirm('Delete this match permanently? All its slots (registrations) will be deleted too.')) return;
+  try {
+    await deleteDoc(doc(db, 'matches', id));
+    await deleteSlotsForMatchId(id); // cascade: auto-delete this TT's slots + slot count
+    showToast('MATCH + SLOTS DELETED');
+    await loadMatches();
+  }
+  catch(e){ showToast('ERROR DELETING'); }
+};
+
+/** Deletes every registration ("slot") tied to matchId, plus its slotCounts doc. */
+async function deleteSlotsForMatchId(matchId){
+  const snap = await getDocs(query(collection(db, 'registrations'), where('matchId','==',matchId)));
+  if(!snap.empty){
+    const batch = writeBatch(db);
+    snap.forEach(d => batch.delete(doc(db, 'registrations', d.id)));
+    await batch.commit();
+  }
+  try { await deleteDoc(doc(db, 'slotCounts', matchId)); } catch(_){}
+}
+
+/* ═══════════════════════════════════════════════
+   SLOT CLEANUP TAB
+   ═══════════════════════════════════════════════ */
+window.loadSlotManager = async () => {
+  if(!allMatches.length) await loadMatches();
+  const sel = document.getElementById('slot-tt-select');
+  sel.innerHTML = '<option value="">— SELECT A TT —</option>' +
+    allMatches.map(m => `<option value="${m.id}">${(m.name||m.id).replace(/</g,'&lt;')}</option>`).join('');
+  document.getElementById('slot-manual-wrap').style.display = 'none';
+  await scanOrphanedSlots();
+};
+
+/** Finds registrations + slotCounts whose matchId no longer has a matching match doc. */
+window.scanOrphanedSlots = async () => {
+  const list = document.getElementById('orphan-slots-list');
+  const badge = document.getElementById('orphan-count-badge');
+  const delBtn = document.getElementById('orphan-delete-all-btn');
+  list.innerHTML = '<div style="text-align:center;padding:20px;font-family:Orbitron,sans-serif;font-size:10px;color:var(--text2);">SCANNING...</div>';
+  try {
+    const matchSnap = await getDocs(collection(db, 'matches'));
+    const liveMatchIds = new Set();
+    matchSnap.forEach(d => liveMatchIds.add(d.id));
+
+    const regSnap = await getDocs(collection(db, 'registrations'));
+    const groups = {}; // matchId -> { matchName, count, ids: [] }
+    regSnap.forEach(d => {
+      const r = d.data();
+      const mId = r.matchId || '(no matchId)';
+      if(liveMatchIds.has(mId)) return; // TT still exists — not orphaned
+      if(!groups[mId]) groups[mId] = { matchName: r.matchName || mId, count: 0, ids: [] };
+      groups[mId].count++;
+      groups[mId].ids.push(d.id);
+    });
+
+    const scSnap = await getDocs(collection(db, 'slotCounts'));
+    const orphanSlotCountIds = [];
+    scSnap.forEach(d => { if(!liveMatchIds.has(d.id)) orphanSlotCountIds.push(d.id); });
+
+    orphanedSlots = Object.entries(groups).map(([matchId, g]) => ({ matchId, ...g }));
+    window.__orphanSlotCountIds = orphanSlotCountIds;
+
+    const totalOrphanRegs = orphanedSlots.reduce((s,g) => s + g.count, 0);
+    badge.textContent = totalOrphanRegs;
+    delBtn.disabled = totalOrphanRegs === 0 && orphanSlotCountIds.length === 0;
+
+    if(!orphanedSlots.length && !orphanSlotCountIds.length){
+      list.innerHTML = '<div style="text-align:center;padding:24px;font-family:Orbitron,sans-serif;font-size:10px;color:var(--text2);">NO ORPHANED SLOTS — ALL CLEAN</div>';
+      return;
+    }
+
+    list.innerHTML = orphanedSlots.map(g => `
+      <div class="reg-row">
+        <div class="reg-top">
+          <div class="reg-team">${String(g.matchName).replace(/</g,'&lt;')}</div>
+          <span class="badge badge-red">DELETED TT</span>
+        </div>
+        <div class="reg-id">${g.count} slot${g.count===1?'':'s'} · matchId: ${g.matchId}</div>
+      </div>`).join('') +
+      (orphanSlotCountIds.length ? `<div class="reg-id" style="padding:8px 2px;">+ ${orphanSlotCountIds.length} leftover slot-count record${orphanSlotCountIds.length===1?'':'s'} with no matching TT</div>` : '');
+  } catch(e){
+    console.error(e);
+    list.innerHTML = '<div style="color:#cc0000;padding:20px;text-align:center;">ERROR SCANNING</div>';
+  }
+};
+
+window.deleteOrphanedSlots = async () => {
+  const totalOrphanRegs = orphanedSlots.reduce((s,g) => s + g.count, 0);
+  const scIds = window.__orphanSlotCountIds || [];
+  if(!totalOrphanRegs && !scIds.length) return;
+  if(!confirm(`Delete ${totalOrphanRegs} orphaned slot(s) and ${scIds.length} leftover slot-count record(s)? This cannot be undone.`)) return;
+  try {
+    const batch = writeBatch(db);
+    orphanedSlots.forEach(g => g.ids.forEach(id => batch.delete(doc(db, 'registrations', id))));
+    scIds.forEach(id => batch.delete(doc(db, 'slotCounts', id)));
+    await batch.commit();
+    showToast('ORPHANED SLOTS DELETED');
+    await scanOrphanedSlots();
+  } catch(e){
+    console.error(e);
+    showToast('ERROR DELETING ORPHANED SLOTS');
+  }
+};
+
+/** Loads all registrations ("slots") for a chosen, still-existing TT for manual bulk delete. */
+window.loadSlotsForTT = async () => {
+  const matchId = document.getElementById('slot-tt-select').value;
+  const wrap = document.getElementById('slot-manual-wrap');
+  const listEl = document.getElementById('slot-manual-list');
+  selectedManualSlotIds = new Set();
+  document.getElementById('slot-select-all').checked = false;
+  updateSlotSelectedCount();
+  if(!matchId){ wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  listEl.innerHTML = '<div style="text-align:center;padding:20px;font-family:Orbitron,sans-serif;font-size:10px;color:var(--text2);">LOADING...</div>';
+  try {
+    const snap = await getDocs(query(collection(db, 'registrations'), where('matchId','==',matchId)));
+    manualSlotList = [];
+    snap.forEach(d => manualSlotList.push({ id: d.id, ...d.data() }));
+    if(!manualSlotList.length){
+      listEl.innerHTML = '<div style="text-align:center;padding:24px;font-family:Orbitron,sans-serif;font-size:10px;color:var(--text2);">NO SLOTS FOR THIS TT</div>';
+      return;
+    }
+    listEl.innerHTML = manualSlotList.map(r => {
+      const st = r.status || 'verifying';
+      let badge = 'badge-orange';
+      if(st === 'selected' || st === 'confirmed') badge = 'badge-green';
+      else if(st === 'rejected') badge = 'badge-red';
+      else if(st === 'pending') badge = 'badge-blue';
+      return `<div class="reg-row">
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+          <input type="checkbox" class="slot-check" data-id="${r.id}" onchange="onSlotCheckChange('${r.id}',this.checked)"/>
+          <div style="flex:1;min-width:0;">
+            <div class="reg-top" style="margin-bottom:0;">
+              <div class="reg-team">${(r.teamName||'—').toString().replace(/</g,'&lt;')}</div>
+              <span class="badge ${badge}">${st.toUpperCase()}</span>
+            </div>
+            <div class="reg-id">${r.invId||r.id.slice(0,8)}</div>
+          </div>
+        </label>
+      </div>`;
+    }).join('');
+  } catch(e){
+    console.error(e);
+    listEl.innerHTML = '<div style="color:#cc0000;padding:20px;text-align:center;">ERROR</div>';
+  }
+};
+
+window.onSlotCheckChange = (id, checked) => {
+  if(checked) selectedManualSlotIds.add(id); else selectedManualSlotIds.delete(id);
+  const allChecked = manualSlotList.length > 0 && selectedManualSlotIds.size === manualSlotList.length;
+  document.getElementById('slot-select-all').checked = allChecked;
+  updateSlotSelectedCount();
+};
+
+window.toggleAllSlots = (checked) => {
+  selectedManualSlotIds = new Set(checked ? manualSlotList.map(r => r.id) : []);
+  document.querySelectorAll('.slot-check').forEach(cb => cb.checked = checked);
+  updateSlotSelectedCount();
+};
+
+function updateSlotSelectedCount(){
+  document.getElementById('slot-selected-count').textContent = selectedManualSlotIds.size + ' SELECTED';
+  document.getElementById('slot-delete-selected-btn').disabled = selectedManualSlotIds.size === 0;
+}
+
+window.deleteSelectedSlots = async () => {
+  const matchId = document.getElementById('slot-tt-select').value;
+  if(!matchId || !selectedManualSlotIds.size) return;
+  if(!confirm(`Delete ${selectedManualSlotIds.size} selected slot(s)? This cannot be undone.`)) return;
+  try {
+    const batch = writeBatch(db);
+    selectedManualSlotIds.forEach(id => batch.delete(doc(db, 'registrations', id)));
+    await batch.commit();
+    await recountSlots(matchId);
+    showToast('SELECTED SLOTS DELETED');
+    await loadSlotsForTT();
+  } catch(e){
+    console.error(e);
+    showToast('ERROR DELETING SELECTED SLOTS');
+  }
+};
+
+window.loadRegistrations = async () => {
+  const list = document.getElementById('regs-list');
+  list.innerHTML = '<div style="text-align:center;padding:20px;font-family:Orbitron,sans-serif;font-size:10px;color:var(--text2);">LOADING...</div>';
+  try {
+    const snap = await getDocs(query(collection(db, 'registrations'), orderBy('registeredAt', 'desc')));
+    allRegs = [];
+    snap.forEach(d => allRegs.push({ id: d.id, ...d.data() }));
+    document.getElementById('stat-regs').textContent = allRegs.length;
+    document.getElementById('stat-pending').textContent = allRegs.filter(r => { const st=r.status||'verifying'; return st==='verifying'||st==='pending'; }).length;
+    renderFilteredRegistrations();
+  } catch(e) { console.error(e); list.innerHTML='<div style="color:#cc0000;padding:20px;text-align:center;">ERROR</div>'; }
+};
+
+function normalizeRegSearchValue(value){ return String(value ?? '').toLowerCase().replace(/[\s\-\(\)\+\.\/_:,]+/g,''); }
+function registrationSearchText(r){
+  const values=[];
+  const walk=(value,depth=0)=>{
+    if(depth>8||value==null)return;
+    if(typeof value==='object'){
+      if(Array.isArray(value)) value.forEach(v=>walk(v,depth+1));
+      else Object.entries(value).forEach(([k,v])=>{values.push(k);walk(v,depth+1);});
+    } else values.push(String(value));
+  };
+  walk(r); return values.join(' ');
+}
+function matchesRegistrationSearch(r,search){
+  if(!search)return true;
+  const raw=registrationSearchText(r), nr=normalizeRegSearchValue(raw), ns=normalizeRegSearchValue(search);
+  return !ns || raw.toLowerCase().includes(search.toLowerCase()) || nr.includes(ns);
+}
+function renderFilteredRegistrations(){
+  const list=document.getElementById('regs-list'); if(!list)return;
+  const input=document.getElementById('reg-search'), clear=document.getElementById('reg-search-clear'), info=document.getElementById('reg-search-info');
+  const search=input?input.value.trim():''; if(clear)clear.style.display=search?'block':'none';
+  const filterEl=document.getElementById('reg-match-filter'), filter=filterEl?filterEl.value:'all';
+  let rows=filter==='all'?allRegs:allRegs.filter(r=>r.matchId===filter); rows=rows.filter(r=>matchesRegistrationSearch(r,search));
+  if(info)info.textContent=search?`${rows.length} RESULT${rows.length===1?'':'S'} FOUND`:`${rows.length} REGISTRATIONS`;
+  if(!rows.length){list.innerHTML=`<div style="text-align:center;padding:24px;font-family:Orbitron,sans-serif;font-size:10px;color:var(--text2);">${search?'NO MATCHING REGISTRATIONS':'NO REGISTRATIONS'}</div>`;return;}
+  list.innerHTML=rows.map(r=>{
+    const st=r.status||'verifying'; let badge='badge-orange';
+    if(st==='selected'||st==='confirmed')badge='badge-green'; else if(st==='rejected')badge='badge-red'; else if(st==='pending')badge='badge-blue';
+    const isFree=r.matchType==='free'||Number(r.entryFee)===0; const canSelect=isFree&&(st==='confirmed'||st==='pending');
+    return `<div class="reg-row" style="cursor:pointer;"><div class="reg-top" onclick="openReg('${r.id}')"><div class="reg-team">${r.teamName||'—'}</div><span class="badge ${badge}">${st.toUpperCase()}</span></div><div class="reg-id" onclick="openReg('${r.id}')">${r.matchName||''} · ${isFree?'FREE':'PAID'} · ${r.invId||r.id.slice(0,8)}</div>${canSelect?`<div style="margin-top:10px;"><button class="btn-gold" type="button" onclick="event.stopPropagation();quickSelectTeam('${r.id}')">★ SELECT FOR SLOT</button></div>`:''}</div>`;
+  }).join('');
+}
+window.filterRegistrations=()=>renderFilteredRegistrations();
+window.clearRegSearch=()=>{const i=document.getElementById('reg-search');if(i){i.value='';i.focus();}renderFilteredRegistrations();};
+
+window.openReg = (id) => {
+  const r = allRegs.find(x => x.id === id); if(!r) return;
+  currentRegDocId = id;
+  const isFree = r.matchType === 'free' || Number(r.entryFee) === 0;
+  const st = r.status || 'verifying';
+  const b = document.getElementById('reg-modal-body');
+  b.innerHTML = `
+  <div style="margin-bottom:14px;">
+    <div style="font-family:Orbitron,sans-serif;font-size:16px;font-weight:900;margin-bottom:4px;">${r.teamName||'—'}</div>
+    <div style="font-family:Orbitron,sans-serif;font-size:9px;color:var(--text2);letter-spacing:1px;">GUILD: ${r.guild||'—'} · ${isFree?'FREE TOURNAMENT':'PAID'} · ${r.invId||''}</div>
+    <div style="font-family:Orbitron,sans-serif;font-size:9px;color:var(--blue);letter-spacing:1px;margin-top:4px;">EMAIL: ${getRegEmail(r)||'NOT FOUND'}</div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+    <div style="background:var(--gray);border-radius:8px;padding:10px;"><div style="font-size:8px;color:var(--text2);letter-spacing:1px;margin-bottom:3px;font-family:Orbitron,sans-serif;">MATCH</div><div style="font-family:Orbitron,sans-serif;font-size:11px;font-weight:700;">${r.matchName||'—'}</div></div>
+    <div style="background:var(--gray);border-radius:8px;padding:10px;"><div style="font-size:8px;color:var(--text2);letter-spacing:1px;margin-bottom:3px;font-family:Orbitron,sans-serif;">ENTRY</div><div style="font-family:Orbitron,sans-serif;font-size:11px;font-weight:700;color:var(--blue);">${isFree?'FREE':('₹'+(r.entryFee||0))}</div></div>
+    <div style="background:var(--gray);border-radius:8px;padding:10px;"><div style="font-size:8px;color:var(--text2);letter-spacing:1px;margin-bottom:3px;font-family:Orbitron,sans-serif;">IGL</div><div style="font-family:Orbitron,sans-serif;font-size:11px;font-weight:700;">${r.iglContact||'—'}</div></div>
+    <div style="background:var(--gray);border-radius:8px;padding:10px;"><div style="font-size:8px;color:var(--text2);letter-spacing:1px;margin-bottom:3px;font-family:Orbitron,sans-serif;">STATUS</div><div style="font-family:Orbitron,sans-serif;font-size:11px;font-weight:700;">${st.toUpperCase()}</div></div>
+  </div>
+  <div style="font-family:Orbitron,sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;color:var(--text2);margin-bottom:8px;">SQUAD</div>
+  ${(r.players||[]).map(p => `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray);"><div style="width:20px;height:20px;background:var(--blue);border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-family:Orbitron,sans-serif;font-size:9px;font-weight:800;">${p.slot}</div><div><div style="font-family:Orbitron,sans-serif;font-size:10px;font-weight:700;">${p.ign||'—'} ${p.role?`[${p.role}]`:''}</div><div style="font-family:Orbitron,sans-serif;font-size:9px;color:var(--text2);">UID: ${p.uid||'—'}</div></div></div>`).join('') || '<div style="font-size:11px;color:var(--text2);">No squad slots</div>'}
+  ${r.customAnswers && Object.keys(r.customAnswers).length ? `
+    <div style="font-family:Orbitron,sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;color:var(--text2);margin:14px 0 8px;">FORM ANSWERS</div>
+    ${Object.values(r.customAnswers).map(a => `
+      <div style="padding:8px 0;border-bottom:1px solid var(--gray);">
+        <div style="font-family:Orbitron,sans-serif;font-size:8px;color:var(--text2);letter-spacing:1px;">${(a.label||'').replace(/</g,'&lt;')}</div>
+        <div style="font-family:Orbitron,sans-serif;font-size:12px;font-weight:700;margin-top:2px;">${String(a.value||'—').replace(/</g,'&lt;')}</div>
+      </div>`).join('')}
+  ` : ''}
+  ${r.screenshotUrl ? `<div style="margin-top:14px;"><div style="font-family:Orbitron,sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;color:var(--text2);margin-bottom:8px;">PAYMENT SCREENSHOT</div><img src="${r.screenshotUrl}" style="width:100%;border-radius:10px;border:1.5px solid var(--border);" onclick="window.open('${r.screenshotUrl}','_blank')"/></div>` : ''}`;
+
+  const btnSelect = document.getElementById('reg-btn-select');
+  const btnVerify = document.getElementById('reg-btn-verify');
+  const btnEmail = document.getElementById('reg-btn-email');
+  // Free + confirmed/pending → golden SELECT (no code)
+  if(isFree && (st === 'confirmed' || st === 'pending')){
+    btnSelect.style.display = 'inline-block';
+    btnVerify.style.display = 'none';
+  } else if(!isFree && st === 'verifying'){
+    btnSelect.style.display = 'none';
+    btnVerify.style.display = 'inline-block';
+  } else {
+    btnSelect.style.display = 'none';
+    btnVerify.style.display = 'none';
+  }
+  if(btnEmail) btnEmail.style.display = getRegEmail(r) ? 'inline-block' : 'none';
+  document.getElementById('reg-modal').classList.add('open');
+};
+window.closeRegModal = () => document.getElementById('reg-modal').classList.remove('open');
+window.promptVerificationCode = () => {
+  if(!currentRegDocId){ showToast('NO REG SELECTED'); return; }
+  document.getElementById('verify-code-modal').classList.add('open');
+  const inp = document.getElementById('verify-code-input'); inp.value = ''; setTimeout(() => inp.focus(), 50);
+};
+window.closeVerifyCodeModal = () => document.getElementById('verify-code-modal').classList.remove('open');
+
+function playSelectPopper(selectedCount, totalSlots, teamName){
+  const layer = document.createElement('div');
+  layer.className = 'confetti-layer';
+  const colors = ['#ffc61a','#ff9d00','#ff6b1a','#fff','#2fe28a','#1a6fff'];
+  for(let i=0;i<48;i++){
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.left = (Math.random()*100) + '%';
+    p.style.background = colors[i % colors.length];
+    p.style.animationDuration = (1.4 + Math.random()*1.6) + 's';
+    p.style.animationDelay = (Math.random()*0.25) + 's';
+    p.style.transform = `rotate(${Math.random()*360}deg)`;
+    layer.appendChild(p);
+  }
+  document.body.appendChild(layer);
+  const burst = document.createElement('div');
+  burst.className = 'select-burst';
+  burst.innerHTML = `<div class="sb-title">★ TEAM SELECTED</div><div class="sb-sub">${(teamName||'Team').replace(/</g,'')} · ${selectedCount}/${totalSlots} slots</div>`;
+  document.body.appendChild(burst);
+  setTimeout(() => { layer.remove(); burst.remove(); }, 2200);
+}
+
+async function recountSlots(matchId){
+  // Progress bar uses "confirmed" field = all registered (confirmed OR selected)
+  // "selected" field = final admin picks only (free SELECT / paid verified)
+  const selectedSnap = await getDocs(query(collection(db, 'registrations'), where('matchId','==',matchId), where('status','==','selected')));
+  const confSnap = await getDocs(query(collection(db, 'registrations'), where('matchId','==',matchId), where('status','==','confirmed')));
+  const ids = new Set();
+  selectedSnap.forEach(d => ids.add(d.id));
+  confSnap.forEach(d => ids.add(d.id));
+  const registered = ids.size;
+  const selectedOnly = selectedSnap.size;
+  await setDoc(doc(db, 'slotCounts', matchId), { confirmed: registered, selected: selectedOnly }, { merge: true });
+  return { registered, selectedOnly };
+}
+
+window.verifyAndUpdate = async (shouldConfirm) => {
+  const entered = (document.getElementById('verify-code-input').value||'').trim().toUpperCase();
+  closeVerifyCodeModal();
+  if(!currentRegDocId){ showToast('NO REG'); return; }
+  if(!entered){ showToast('ENTER CODE'); return; }
+  try {
+    const regSnap = await getDoc(doc(db, 'registrations', currentRegDocId));
+    if(!regSnap.exists()){ showToast('REG NOT FOUND'); return; }
+    const stored = (regSnap.data().verifyCode||'').toUpperCase().trim();
+    if(shouldConfirm){
+      if(stored && entered === stored){
+        await updateStatus('selected');
+        showToast('CODE VERIFIED — SELECTED');
+      } else {
+        await updateStatus('rejected');
+        showToast('WRONG CODE — REJECTED');
+      }
+    } else {
+      await updateStatus('rejected');
+      showToast('REJECTED');
+    }
+  } catch(e){ showToast('ERROR VERIFYING'); }
+};
+
+window.selectTeamForSlot = async () => {
+  if(!currentRegDocId) return;
+  await quickSelectTeam(currentRegDocId);
+};
+
+window.quickSelectTeam = async (regId) => {
+  currentRegDocId = regId;
+  try {
+    const regSnap = await getDoc(doc(db, 'registrations', regId));
+    if(!regSnap.exists()){ showToast('REG NOT FOUND'); return; }
+    const regData = regSnap.data();
+    const matchId = regData.matchId;
+    const matchSnap = await getDoc(doc(db, 'matches', matchId));
+    const totalSlots = matchSnap.exists() ? parseInt(matchSnap.data().slots)||12 : 12;
+    const counts = await recountSlots(matchId);
+    // Already final pick
+    if(regData.status === 'selected'){
+      showToast('ALREADY SELECTED');
+      return;
+    }
+    // Must be confirmed (or pending legacy) to select
+    if(regData.status !== 'confirmed' && regData.status !== 'pending'){
+      showToast('ONLY CONFIRMED TEAMS CAN BE SELECTED');
+      return;
+    }
+    // Max SELECTED teams (progress bar does NOT change on select)
+    if(counts.selectedOnly >= totalSlots){
+      showToast('SELECT SLOTS FULL ('+counts.selectedOnly+'/'+totalSlots+')');
+      return;
+    }
+
+    await updateDoc(doc(db, 'registrations', regId), {
+      status: 'selected',
+      selectedAt: serverTimestamp()
+    });
+    const after = await recountSlots(matchId);
+    // Progress (registered) stays same; popper shows selected/total
+    playSelectPopper(after.selectedOnly, totalSlots, regData.teamName || 'Team');
+    showToast('SELECTED '+after.selectedOnly+'/'+totalSlots);
+    await sendRegConfirmationEmail({ id: regId, ...regData, status: 'selected' });
+    closeRegModal();
+    await loadRegistrations();
+  } catch(e){
+    console.error(e);
+    showToast('ERROR SELECTING');
+  }
+};
+
+window.updateStatus = async (newStatus) => {
+  if(!currentRegDocId) return;
+  try {
+    const regSnap = await getDoc(doc(db, 'registrations', currentRegDocId));
+    if(!regSnap.exists()){ showToast('REG NOT FOUND'); return; }
+    const regData = regSnap.data();
+    const matchId = regData.matchId;
+    if(newStatus === 'selected' || newStatus === 'confirmed'){
+      const matchSnap = await getDoc(doc(db, 'matches', matchId));
+      const totalSlots = matchSnap.exists() ? parseInt(matchSnap.data().slots)||12 : 12;
+      const counts = await recountSlots(matchId);
+      const isFree = regData.matchType === 'free' || Number(regData.entryFee) === 0;
+      if(isFree){
+        // free paid path shouldn't use this often — select uses quickSelectTeam
+        if(counts.selectedOnly >= totalSlots && regData.status !== 'selected'){
+          showToast('SELECT SLOTS FULL');
+          return;
+        }
+        newStatus = 'selected';
+      } else {
+        // paid: verifying → selected fills progress
+        if(counts.registered >= totalSlots && regData.status !== 'selected' && regData.status !== 'confirmed'){
+          showToast('SLOTS FULL');
+          return;
+        }
+        newStatus = 'selected';
+      }
+    }
+    await updateDoc(doc(db, 'registrations', currentRegDocId), { status: newStatus });
+    const after = await recountSlots(matchId);
+    if(newStatus === 'selected'){
+      const matchSnap2 = await getDoc(doc(db, 'matches', matchId));
+      const totalSlots = matchSnap2.exists() ? parseInt(matchSnap2.data().slots)||12 : 12;
+      playSelectPopper(after.selectedOnly, totalSlots, regData.teamName);
+    }
+    showToast('STATUS: ' + newStatus.toUpperCase());
+    if(newStatus === 'selected' || newStatus === 'confirmed'){
+      await sendRegConfirmationEmail({ id: currentRegDocId, ...regData, status: newStatus });
+    }
+    closeRegModal();
+    await loadRegistrations();
+  } catch(e){ console.error(e); showToast('ERROR UPDATING'); }
+};
+
+window.deleteCurrentRegistration = async () => {
+  if(!currentRegDocId) return;
+  if(!confirm('DELETE THIS REGISTRATION PERMANENTLY?')) return;
+  try {
+    const regSnap = await getDoc(doc(db, 'registrations', currentRegDocId));
+    const matchId = regSnap.exists() ? regSnap.data().matchId : null;
+    await deleteDoc(doc(db, 'registrations', currentRegDocId));
+    if(matchId) await recountSlots(matchId);
+    showToast('DELETED');
+    closeRegModal();
+    await loadRegistrations();
+  } catch(e){ showToast('ERROR DELETING'); }
+};
+
+window.loadHeroSettings = async () => {
+  try {
+    const snap = await getDoc(doc(db, 'banners', 'hero'));
+    if(snap.exists()){
+      const d = snap.data();
+      document.getElementById('hero-tag').value = d.tag || '';
+      document.getElementById('hero-title').value = d.title || '';
+      document.getElementById('hero-sub').value = d.subtitle || '';
+      document.getElementById('hero-status-label').value = d.statusLabel || '';
+      document.getElementById('hero-status-value').value = d.statusValue || '';
+      document.getElementById('hero-img-url').value = d.bgImage || '';
+      if(d.bgImage){ const p = document.getElementById('hero-dz-prev'); p.src = d.bgImage; p.style.display = 'block'; }
+    }
+  } catch(e){}
+};
+window.saveHero = async () => {
+  const data = {
+    tag: document.getElementById('hero-tag').value.trim(),
+    title: document.getElementById('hero-title').value.trim(),
+    subtitle: document.getElementById('hero-sub').value.trim(),
+    statusLabel: document.getElementById('hero-status-label').value.trim(),
+    statusValue: document.getElementById('hero-status-value').value.trim(),
+    bgImage: document.getElementById('hero-img-url').value.trim()
+  };
+  try { await setDoc(doc(db, 'banners', 'hero'), data); showToast('HERO BANNER SAVED'); }
+  catch(e){ showToast('ERROR SAVING'); }
+};
+
+const DEFAULT_STATS = [
+  { value: 1280, label: 'Teams registered' },
+  { value: 7, label: 'Seasons run' },
+  { value: 90, label: 'Days per season' },
+  { value: 2400, label: 'Community members' }
+];
+const DEFAULT_TICKER = [
+  'Season registration opens soon',
+  'Grand Final energy is live',
+  'New squad verification system active',
+  'Community Discord is growing',
+  'Weekly bounty matches every Friday'
+];
+
+let tickerItems = []; // string[]
+
+function renderTickerItemsEditor(){
+  const box = document.getElementById('ticker-items-editor');
+  const empty = document.getElementById('ticker-items-empty');
+  if(!box) return;
+  box.innerHTML = '';
+  if(!tickerItems.length){
+    if(empty) empty.style.display = 'block';
+    return;
+  }
+  if(empty) empty.style.display = 'none';
+  tickerItems.forEach((text, i) => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;gap:8px;align-items:center;';
+    row.innerHTML = `
+      <input type="text" class="finput" style="margin:0;flex:1;" value="${String(text||'').replace(/"/g,'&quot;')}" placeholder="Ticker line…" oninput="updateTickerItem(${i},this.value)"/>
+      <button type="button" class="btn-red" onclick="removeTickerItem(${i})">DEL</button>`;
+    box.appendChild(row);
+  });
+}
+window.addTickerItem = () => {
+  if(tickerItems.length >= 12){ showToast('MAX 12 TICKER LINES'); return; }
+  tickerItems.push('');
+  renderTickerItemsEditor();
+};
+window.removeTickerItem = (i) => {
+  tickerItems.splice(i, 1);
+  renderTickerItemsEditor();
+};
+window.updateTickerItem = (i, val) => {
+  if(tickerItems[i] === undefined) return;
+  tickerItems[i] = val;
+};
+
+window.loadSettings = async () => {
+  try {
+    const snap = await getDoc(doc(db, 'settings', 'global'));
+    if(snap.exists()){
+      const d = snap.data();
+      const rp=d.rulesPage&&typeof d.rulesPage==='object'?d.rulesPage:DEFAULT_RULES_PAGE;
+      rulesPage={title:String(rp.title||DEFAULT_RULES_PAGE.title),subtitle:String(rp.subtitle||DEFAULT_RULES_PAGE.subtitle),sections:(Array.isArray(rp.sections)?rp.sections:DEFAULT_RULES_PAGE.sections).map(x=>({title:String(x.title||''),items:Array.isArray(x.items)?x.items.map(v=>String(v)):[],itemsText:Array.isArray(x.items)?x.items.map(v=>String(v)).join('\n'):String(x.itemsText||'')}))};
+      renderRulesEditor();
+      document.getElementById('set-upi').value = d.upiId || '';
+      document.getElementById('set-wa').value = d.whatsapp || DEFAULT_WA_GROUP;
+      const chEl = document.getElementById('set-wa-channel');
+      if(chEl) chEl.value = d.whatsappChannel || DEFAULT_WA_CHANNEL;
+      document.getElementById('set-admin-wa').value = d.adminWhatsapp || d.whatsapp || '';
+      document.getElementById('set-ig').value = d.instagram || '';
+      document.getElementById('set-dc').value = d.discord || DEFAULT_DISCORD;
+      const gasEl = document.getElementById('set-gas-url');
+      if(gasEl) gasEl.value = d.gasWebAppUrl || '';
+      document.getElementById('set-maint-toggle').checked = !!d.maintenanceMode;
+      document.getElementById('set-maint-reason').value = d.maintenanceReason || '';
+      document.getElementById('pagebg-img-url').value = d.pageBackground || '';
+      if(d.pageBackground){ const p = document.getElementById('pagebg-dz-prev'); p.src = d.pageBackground; p.style.display = 'block'; }
+      sidebarLinks = Array.isArray(d.sidebarLinks) ? d.sidebarLinks.map(l => ({ name: l.name||'', url: l.url||'' })).slice(0,7) : [];
+      renderSidebarLinksEditor();
+
+      // Stats
+      const stats = Array.isArray(d.stats) && d.stats.length ? d.stats : DEFAULT_STATS;
+      for(let i = 0; i < 4; i++){
+        const s = stats[i] || DEFAULT_STATS[i];
+        const valEl = document.getElementById('stat' + (i+1) + '-val');
+        const labEl = document.getElementById('stat' + (i+1) + '-label');
+        if(valEl) valEl.value = s.value ?? DEFAULT_STATS[i].value;
+        if(labEl) labEl.value = s.label || DEFAULT_STATS[i].label;
+      }
+
+      // Ticker
+      document.getElementById('ticker-enabled').checked = d.tickerEnabled !== false;
+      document.getElementById('ticker-direction').value = d.tickerDirection === 'right' ? 'right' : 'left';
+      document.getElementById('ticker-speed').value = d.tickerSpeed || 28;
+      tickerItems = Array.isArray(d.tickerItems) && d.tickerItems.length
+        ? d.tickerItems.map(t => String(t || ''))
+        : DEFAULT_TICKER.slice();
+      renderTickerItemsEditor();
+    } else {
+      rulesPage={title:DEFAULT_RULES_PAGE.title,subtitle:DEFAULT_RULES_PAGE.subtitle,sections:DEFAULT_RULES_PAGE.sections.map(x=>({title:x.title,items:x.items.slice(),itemsText:x.items.join("\n")}))};
+      renderRulesEditor();
+      // defaults when no settings doc yet
+      document.getElementById('set-wa').value = DEFAULT_WA_GROUP;
+      const chEl0 = document.getElementById('set-wa-channel');
+      if(chEl0) chEl0.value = DEFAULT_WA_CHANNEL;
+      document.getElementById('set-dc').value = DEFAULT_DISCORD;
+      DEFAULT_STATS.forEach((s, i) => {
+        document.getElementById('stat' + (i+1) + '-val').value = s.value;
+        document.getElementById('stat' + (i+1) + '-label').value = s.label;
+      });
+      tickerItems = DEFAULT_TICKER.slice();
+      renderTickerItemsEditor();
+    }
+  } catch(e){ console.warn(e); }
+};
+window.saveSettings = async () => {
+  const cleanLinks = sidebarLinks
+    .map(l => ({ name: (l.name||'').trim(), url: (l.url||'').trim() }))
+    .filter(l => l.name && l.url)
+    .slice(0, 7);
+
+  const stats = [1,2,3,4].map(i => ({
+    value: parseInt(document.getElementById('stat' + i + '-val').value, 10) || 0,
+    label: (document.getElementById('stat' + i + '-label').value || '').trim() || DEFAULT_STATS[i-1].label
+  }));
+
+  const cleanTicker = tickerItems.map(t => String(t||'').trim()).filter(Boolean).slice(0, 12);
+
+  const data = {
+    upiId: document.getElementById('set-upi').value.trim(),
+    whatsapp: document.getElementById('set-wa').value.trim() || DEFAULT_WA_GROUP,
+    whatsappChannel: (document.getElementById('set-wa-channel')?.value || '').trim() || DEFAULT_WA_CHANNEL,
+    adminWhatsapp: document.getElementById('set-admin-wa').value.trim(),
+    instagram: document.getElementById('set-ig').value.trim(),
+    discord: document.getElementById('set-dc').value.trim() || DEFAULT_DISCORD,
+    gasWebAppUrl: (document.getElementById('set-gas-url')?.value || '').trim(),
+    maintenanceMode: document.getElementById('set-maint-toggle').checked,
+    maintenanceReason: document.getElementById('set-maint-reason').value.trim(),
+    pageBackground: document.getElementById('pagebg-img-url').value.trim(),
+    sidebarLinks: cleanLinks,
+    stats,
+    tickerEnabled: document.getElementById('ticker-enabled').checked,
+    tickerDirection: document.getElementById('ticker-direction').value === 'right' ? 'right' : 'left',
+    tickerSpeed: Math.min(120, Math.max(8, parseInt(document.getElementById('ticker-speed').value, 10) || 28)),
+    tickerItems: cleanTicker
+  };
+  try { await setDoc(doc(db, 'settings', 'global'), data, { merge: true }); showToast('SETTINGS SAVED'); }
+  catch(e){ showToast('ERROR SAVING'); }
+};
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function getRegEmail(r){
+  if(!r) return '';
+  const direct = [r.email, r.userEmail, r.playerEmail, r.contactEmail, r.mail]
+    .map(v => String(v||'').trim())
+    .find(v => EMAIL_RE.test(v));
+  if(direct) return direct.toLowerCase();
+  const answers = r.customAnswers && typeof r.customAnswers === 'object' ? Object.values(r.customAnswers) : [];
+  for(const a of answers){
+    const label = String((a && a.label) || '').toLowerCase();
+    const val = String((a && (a.value ?? a)) || '').trim();
+    if((label.includes('email') || label.includes('gmail') || label.includes('mail')) && EMAIL_RE.test(val)){
+      return val.toLowerCase();
+    }
+  }
+  for(const a of answers){
+    const val = String((a && (a.value ?? a)) || '').trim();
+    if(EMAIL_RE.test(val)) return val.toLowerCase();
+  }
+  return '';
+}
+
+function getGasWebAppUrl(){
+  return (document.getElementById('set-gas-url')?.value || '').trim();
+}
+
+window.resendRegConfirmationEmail = async () => {
+  if(!currentRegDocId){ showToast('NO REG SELECTED'); return; }
+  const r = allRegs.find(x => x.id === currentRegDocId);
+  if(!r){ showToast('REG NOT FOUND'); return; }
+  await sendRegConfirmationEmail(r, true);
+};
+
+async function sendRegConfirmationEmail(reg, force){
+  try {
+    let email = getRegEmail(reg);
+    if(!email){
+      const uid = reg.uid || reg.userId || reg.userUid;
+      if(uid){
+        try {
+          const uSnap = await getDoc(doc(db, 'users', uid));
+          if(uSnap.exists()){
+            const ud = uSnap.data() || {};
+            const fromUser = [ud.email, ud.userEmail, ud.mail]
+              .map(v => String(v||'').trim())
+              .find(v => EMAIL_RE.test(v));
+            if(fromUser) email = fromUser.toLowerCase();
+          }
+        } catch(_){}
+      }
+    }
+    if(!email){
+      showToast('NO EMAIL ON THIS REG');
+      return false;
+    }
+    if(!force && reg.confirmEmailSent){
+      return true;
+    }
+    const gasUrl = getGasWebAppUrl();
+    if(!gasUrl){
+      showToast('SET GOOGLE SCRIPT URL IN SETTINGS');
+      return false;
+    }
+    const isFree = reg.matchType === 'free' || Number(reg.entryFee) === 0;
+    const payload = {
+      action: 'confirm',
+      secret: GAS_MAIL_SECRET,
+      email,
+      code: String(reg.invId || reg.verifyCode || reg.id || '').toUpperCase(),
+      info: {
+        matchName: reg.matchName || '',
+        teamName: reg.teamName || '',
+        guild: reg.guild || '',
+        mode: reg.mode || '',
+        time: reg.time || reg.matchTime || '',
+        entry: isFree ? 'FREE' : ('₹' + (reg.entryFee || 0)),
+        iglContact: reg.iglContact || '',
+        invId: reg.invId || '',
+        status: (reg.status || 'confirmed').toUpperCase(),
+        players: Array.isArray(reg.players) ? reg.players : [],
+        customAnswers: reg.customAnswers || {}
+      }
+    };
+    await fetch(gasUrl, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+    if(reg.id){
+      try {
+        await updateDoc(doc(db, 'registrations', reg.id), {
+          confirmEmailSent: true,
+          confirmEmailTo: email,
+          confirmEmailAt: serverTimestamp()
+        });
+      } catch(_){}
+    }
+    showToast('CONFIRM EMAIL SENT');
+    return true;
+  } catch(e){
+    console.error(e);
+    showToast('EMAIL SEND FAILED');
+    return false;
+  }
+}
+document.getElementById('l-passkey').addEventListener('keydown', e => { if(e.key === 'Enter') doPasskeyLogin(); });
+
+/* ═══════════════════════════════════════════════
+   ANNOUNCEMENTS — block builder + drag & drop
+   ═══════════════════════════════════════════════ */
+let allAnnouncements = [];
+let annBlocks = []; // {id, type, text, url, color, bg, size, align}
+let dragBlockId = null;
+
+const ANN_BLOCK_DEFAULTS = {
+  title:  { text: 'Announcement title', color: '#ffc61a', bg: 'transparent', size: '20', align: 'left' },
+  text:   { text: 'Write your message here…', color: '#fff8f0', bg: 'transparent', size: '14', align: 'left' },
+  badge:  { text: 'NEW', color: '#1a0a00', bg: '#ffc61a', size: '11', align: 'left' },
+  button: { text: 'OPEN LINK', url: 'https://', color: '#1a0a00', bg: '#ffc61a', size: '12', align: 'left' },
+  image:  { url: '', color: '#ffffff', bg: 'transparent', size: '100', align: 'center' },
+  divider:{ color: 'rgba(255,198,26,0.35)', bg: 'transparent', size: '1', align: 'center' },
+  spacer: { size: '16', color: 'transparent', bg: 'transparent', align: 'center' }
+};
+
+document.getElementById('ann-style')?.addEventListener('change', () => {
+  document.getElementById('ann-custom-colors').style.display =
+    document.getElementById('ann-style').value === 'custom' ? 'grid' : 'none';
+  renderAnnLivePreview();
+});
+
+window.loadAnnouncements = async () => {
+  const list = document.getElementById('ann-list');
+  if(!list) return;
+  list.innerHTML = '<div style="text-align:center;padding:20px;font-family:Orbitron,sans-serif;font-size:10px;color:var(--text2);">LOADING…</div>';
+  try {
+    let snap;
+    try {
+      snap = await getDocs(query(collection(db, 'announcements'), orderBy('updatedAt', 'desc')));
+    } catch(_) {
+      snap = await getDocs(collection(db, 'announcements'));
+    }
+    allAnnouncements = [];
+    snap.forEach(d => allAnnouncements.push({ id: d.id, ...d.data() }));
+    allAnnouncements.sort((a,b) => {
+      if(!!b.pinned !== !!a.pinned) return b.pinned ? 1 : -1;
+      const ta = a.updatedAt?.toMillis ? a.updatedAt.toMillis() : (a.updatedAt ? Date.parse(a.updatedAt) : 0);
+      const tb = b.updatedAt?.toMillis ? b.updatedAt.toMillis() : (b.updatedAt ? Date.parse(b.updatedAt) : 0);
+      return (tb||0) - (ta||0);
+    });
+    if(!allAnnouncements.length){
+      list.innerHTML = '<div style="text-align:center;padding:24px;font-family:Orbitron,sans-serif;font-size:10px;color:var(--text2);">NO ANNOUNCEMENTS YET</div>';
+      return;
+    }
+    list.innerHTML = allAnnouncements.map(a => {
+      const firstText = (a.blocks||[]).find(b => b.text)?.text || '—';
+      return `<div class="ann-item">
+        <div class="ann-body">
+          <div class="ann-title">${escHtml(a.name||'Untitled')} ${a.pinned?'📌':''}</div>
+          <div class="ann-meta">${a.active?'ACTIVE':'OFF'} · ${(a.blocks||[]).length} blocks · ${a.style||'gold'}</div>
+          <div class="ann-preview">${escHtml(firstText)}</div>
+        </div>
+        <div class="ann-actions">
+          <button class="btn-ghost" onclick="editAnnouncement('${a.id}')">EDIT</button>
+          <button class="btn-red" onclick="deleteAnnouncement('${a.id}')">DEL</button>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e){
+    console.error(e);
+    list.innerHTML = '<div style="color:#cc0000;padding:20px;text-align:center;font-family:Orbitron,sans-serif;font-size:10px;">ERROR LOADING — check Firestore rules for announcements</div>';
+  }
+};
+
+function escHtml(s){
+  return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+window.startNewAnnouncement = () => {
+  document.getElementById('ann-edit-id').value = '';
+  document.getElementById('ann-editor-title').textContent = 'CREATE ANNOUNCEMENT';
+  document.getElementById('ann-save-btn').textContent = 'PUBLISH ANNOUNCEMENT';
+  document.getElementById('ann-name').value = '';
+  document.getElementById('ann-active').checked = true;
+  document.getElementById('ann-pinned').checked = false;
+  document.getElementById('ann-style').value = 'gold';
+  document.getElementById('ann-custom-colors').style.display = 'none';
+  document.getElementById('ann-bg').value = '#1a0a00';
+  document.getElementById('ann-fg').value = '#ffc61a';
+  annBlocks = [];
+  renderAnnBlocks();
+  renderAnnLivePreview();
+  document.getElementById('ann-editor-card').style.display = 'block';
+  document.getElementById('ann-editor-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+
+window.cancelAnnouncementEdit = () => {
+  document.getElementById('ann-editor-card').style.display = 'none';
+  annBlocks = [];
+};
+
+window.editAnnouncement = (id) => {
+  const a = allAnnouncements.find(x => x.id === id); if(!a) return;
+  document.getElementById('ann-edit-id').value = id;
+  document.getElementById('ann-editor-title').textContent = 'EDIT ANNOUNCEMENT';
+  document.getElementById('ann-save-btn').textContent = 'UPDATE ANNOUNCEMENT';
+  document.getElementById('ann-name').value = a.name || '';
+  document.getElementById('ann-active').checked = a.active !== false;
+  document.getElementById('ann-pinned').checked = !!a.pinned;
+  document.getElementById('ann-style').value = a.style || 'gold';
+  document.getElementById('ann-custom-colors').style.display = (a.style === 'custom') ? 'grid' : 'none';
+  document.getElementById('ann-bg').value = a.bg || '#1a0a00';
+  document.getElementById('ann-fg').value = a.fg || '#ffc61a';
+  annBlocks = Array.isArray(a.blocks) ? a.blocks.map(b => ({...b, id: b.id || ('b_'+Math.random().toString(36).slice(2,9))})) : [];
+  renderAnnBlocks();
+  renderAnnLivePreview();
+  document.getElementById('ann-editor-card').style.display = 'block';
+  document.getElementById('ann-editor-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+
+window.deleteAnnouncement = async (id) => {
+  if(!confirm('Delete this announcement permanently?')) return;
+  try {
+    await deleteDoc(doc(db, 'announcements', id));
+    showToast('ANNOUNCEMENT DELETED');
+    await loadAnnouncements();
+  } catch(e){ showToast('ERROR DELETING'); }
+};
+
+window.addAnnBlock = (type) => {
+  const def = ANN_BLOCK_DEFAULTS[type] || ANN_BLOCK_DEFAULTS.text;
+  annBlocks.push({
+    id: 'b_' + Date.now() + '_' + Math.random().toString(36).slice(2,6),
+    type,
+    text: def.text || '',
+    url: def.url || '',
+    color: def.color,
+    bg: def.bg,
+    size: def.size,
+    align: def.align || 'left'
+  });
+  renderAnnBlocks();
+  renderAnnLivePreview();
+};
+
+window.removeAnnBlock = (id) => {
+  annBlocks = annBlocks.filter(b => b.id !== id);
+  renderAnnBlocks();
+  renderAnnLivePreview();
+};
+
+window.updateAnnBlock = (id, key, val) => {
+  const b = annBlocks.find(x => x.id === id);
+  if(!b) return;
+  b[key] = val;
+  renderAnnLivePreview();
+  // refresh only the live mini-preview inside the card
+  const card = document.querySelector(`[data-block-id="${id}"] .block-preview-live`);
+  if(card) card.innerHTML = renderOneBlockHtml(b);
+};
+
+function renderAnnBlocks(){
+  const canvas = document.getElementById('ann-blocks-canvas');
+  const empty = document.getElementById('ann-blocks-empty');
+  if(!canvas) return;
+  canvas.querySelectorAll('.block-card').forEach(n => n.remove());
+  if(!annBlocks.length){
+    if(empty) empty.style.display = 'block';
+    return;
+  }
+  if(empty) empty.style.display = 'none';
+  annBlocks.forEach((b, idx) => {
+    const card = document.createElement('div');
+    card.className = 'block-card';
+    card.dataset.blockId = b.id;
+    card.draggable = true;
+    card.ondragstart = (e) => { dragBlockId = b.id; card.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; };
+    card.ondragend = () => { dragBlockId = null; card.classList.remove('dragging'); };
+    card.ondragover = (e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; };
+    card.ondrop = (e) => {
+      e.preventDefault(); e.stopPropagation();
+      if(!dragBlockId || dragBlockId === b.id) return;
+      const from = annBlocks.findIndex(x => x.id === dragBlockId);
+      const to = annBlocks.findIndex(x => x.id === b.id);
+      if(from < 0 || to < 0) return;
+      const [item] = annBlocks.splice(from, 1);
+      annBlocks.splice(to, 0, item);
+      renderAnnBlocks();
+      renderAnnLivePreview();
+    };
+
+    const typeLabel = (b.type||'text').toUpperCase();
+    let fields = '';
+    if(['title','text','badge','button'].includes(b.type)){
+      fields += `<input type="text" class="finput" value="${escHtml(b.text||'')}" placeholder="Text" oninput="updateAnnBlock('${b.id}','text',this.value)" style="margin-bottom:8px;"/>`;
+    }
+    if(b.type === 'button'){
+      fields += `<input type="text" class="finput" value="${escHtml(b.url||'')}" placeholder="Link URL" oninput="updateAnnBlock('${b.id}','url',this.value)" style="margin-bottom:8px;"/>`;
+    }
+    if(b.type === 'image'){
+      const prevId = 'ann-img-prev-' + b.id;
+      const progId = 'ann-img-prog-' + b.id;
+      const urlId = 'ann-img-url-' + b.id;
+      fields += `
+        <div class="ann-img-dz" id="ann-dz-${b.id}"
+          ondragover="event.preventDefault();this.classList.add('over')"
+          ondragleave="this.classList.remove('over')"
+          ondrop="event.preventDefault();this.classList.remove('over');const f=event.dataTransfer.files[0];if(f)uploadAnnBlockImage('${b.id}',f)">
+          <input type="file" accept="image/*" onchange="if(this.files[0])uploadAnnBlockImage('${b.id}',this.files[0])"/>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a6fff" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <div class="dz-txt">TAP OR DROP IMAGE (ImgBB)</div>
+          <img class="ann-img-prev" id="${prevId}" src="${escHtml(b.url||'')}" style="${b.url?'display:block':''}" alt=""/>
+        </div>
+        <div class="upload-prog" id="${progId}"><div class="spin"></div><span id="${progId}-txt">UPLOADING…</span></div>
+        <input type="hidden" id="${urlId}" value="${escHtml(b.url||'')}"/>
+        <input type="text" class="finput" value="${escHtml(b.url||'')}" placeholder="Or paste image URL" oninput="updateAnnBlock('${b.id}','url',this.value);const p=document.getElementById('${prevId}');if(p&&this.value){p.src=this.value;p.style.display='block';}" style="margin-bottom:8px;"/>
+      `;
+    }
+    if(b.type === 'spacer'){
+      fields += `<input type="number" class="finput" value="${escHtml(b.size||'16')}" min="4" max="80" placeholder="Height px" oninput="updateAnnBlock('${b.id}','size',this.value)" style="margin-bottom:8px;"/>`;
+    }
+    if(['title','text'].includes(b.type)){
+      fields += `<div class="fgrid" style="margin-bottom:8px;">
+        <select class="finput" onchange="updateAnnBlock('${b.id}','align',this.value)">
+          <option value="left" ${b.align==='left'?'selected':''}>Left</option>
+          <option value="center" ${b.align==='center'?'selected':''}>Center</option>
+          <option value="right" ${b.align==='right'?'selected':''}>Right</option>
+        </select>
+        <input type="number" class="finput" value="${escHtml(b.size||'14')}" min="10" max="36" placeholder="Size" oninput="updateAnnBlock('${b.id}','size',this.value)"/>
+      </div>`;
+    }
+
+    fields += `<div class="bc-colors">
+      <label>TEXT <input type="color" value="${b.color && b.color.startsWith('#') ? b.color : '#ffc61a'}" oninput="updateAnnBlock('${b.id}','color',this.value)"/></label>
+      <label>BG <input type="color" value="${b.bg && b.bg.startsWith('#') ? b.bg : '#000000'}" oninput="updateAnnBlock('${b.id}','bg',this.value)"/></label>
+      <button type="button" class="btn-red" style="margin-left:auto;" onclick="removeAnnBlock('${b.id}')">REMOVE</button>
+    </div>
+    <div class="block-preview-live">${renderOneBlockHtml(b)}</div>`;
+
+    card.innerHTML = `
+      <div class="bc-head">
+        <span class="bc-type">${typeLabel}</span>
+        <span class="bc-drag" title="Drag to reorder">⠿</span>
+      </div>
+      ${fields}`;
+    canvas.appendChild(card);
+  });
+}
+
+window.onBlockCanvasDragOver = (e) => {
+  e.preventDefault();
+  e.currentTarget.classList.add('drag-over');
+};
+window.onBlockCanvasDrop = (e) => {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  // drop at end if dropped on empty canvas
+  if(dragBlockId){
+    const from = annBlocks.findIndex(x => x.id === dragBlockId);
+    if(from >= 0){
+      const [item] = annBlocks.splice(from, 1);
+      annBlocks.push(item);
+      renderAnnBlocks();
+      renderAnnLivePreview();
+    }
+  }
+};
+
+function renderOneBlockHtml(b){
+  const align = b.align || 'left';
+  const color = b.color || '#fff8f0';
+  const bg = b.bg && b.bg !== 'transparent' ? b.bg : 'transparent';
+  if(b.type === 'title'){
+    return `<div style="font-family:Orbitron,sans-serif;font-weight:900;font-size:${b.size||20}px;color:${color};background:${bg};text-align:${align};padding:4px 0;">${escHtml(b.text||'')}</div>`;
+  }
+  if(b.type === 'text'){
+    return `<div style="font-family:Rajdhani,sans-serif;font-size:${b.size||14}px;color:${color};background:${bg};text-align:${align};line-height:1.45;padding:2px 0;">${escHtml(b.text||'')}</div>`;
+  }
+  if(b.type === 'badge'){
+    return `<div style="text-align:${align};"><span style="display:inline-block;font-family:Orbitron,sans-serif;font-size:${b.size||11}px;font-weight:800;letter-spacing:1.5px;color:${color};background:${bg};padding:5px 10px;border-radius:4px;">${escHtml(b.text||'')}</span></div>`;
+  }
+  if(b.type === 'button'){
+    return `<div style="text-align:${align};"><a href="${escHtml(b.url||'#')}" style="display:inline-block;font-family:Orbitron,sans-serif;font-size:${b.size||12}px;font-weight:800;letter-spacing:1px;color:${color};background:${bg};padding:10px 16px;border-radius:6px;text-decoration:none;">${escHtml(b.text||'BUTTON')}</a></div>`;
+  }
+  if(b.type === 'image'){
+    if(!b.url) return `<div style="text-align:center;opacity:0.5;font-size:12px;">No image URL</div>`;
+    return `<div style="text-align:${align};"><img src="${escHtml(b.url)}" alt="" style="max-width:100%;border-radius:8px;display:inline-block;"/></div>`;
+  }
+  if(b.type === 'divider'){
+    return `<div style="height:0;border-top:2px solid ${color};margin:6px 0;"></div>`;
+  }
+  if(b.type === 'spacer'){
+    return `<div style="height:${parseInt(b.size)||16}px;"></div>`;
+  }
+  return '';
+}
+
+function getAnnShellColors(){
+  const style = document.getElementById('ann-style')?.value || 'gold';
+  const map = {
+    gold:  { bg: '#140a06', fg: '#ffc61a', border: 'rgba(255,198,26,0.35)' },
+    blue:  { bg: '#0a1628', fg: '#5b9bff', border: 'rgba(26,111,255,0.35)' },
+    red:   { bg: '#1a0808', fg: '#ff6b6b', border: 'rgba(255,61,46,0.4)' },
+    green: { bg: '#081a10', fg: '#2fe28a', border: 'rgba(47,226,138,0.35)' },
+    custom:{ bg: document.getElementById('ann-bg')?.value || '#1a0a00', fg: document.getElementById('ann-fg')?.value || '#ffc61a', border: 'rgba(255,255,255,0.15)' }
+  };
+  return map[style] || map.gold;
+}
+
+function renderAnnLivePreview(){
+  const box = document.getElementById('ann-live-preview');
+  if(!box) return;
+  const shell = getAnnShellColors();
+  box.style.background = shell.bg;
+  box.style.color = shell.fg;
+  box.style.borderColor = shell.border;
+  if(!annBlocks.length){
+    box.innerHTML = '<div style="opacity:0.45;font-family:Orbitron,sans-serif;font-size:10px;letter-spacing:1px;text-align:center;padding:12px;">PREVIEW APPEARS HERE</div>';
+    return;
+  }
+  box.innerHTML = annBlocks.map(renderOneBlockHtml).join('');
+}
+
+// live preview when shell colors change
+['ann-bg','ann-fg','ann-name'].forEach(id => {
+  document.getElementById(id)?.addEventListener('input', renderAnnLivePreview);
+});
+
+window.saveAnnouncement = async () => {
+  const name = document.getElementById('ann-name').value.trim();
+  if(!name){ showToast('ENTER INTERNAL NAME'); return; }
+  if(!annBlocks.length){ showToast('ADD AT LEAST ONE BLOCK'); return; }
+  const editId = document.getElementById('ann-edit-id').value;
+  const shell = getAnnShellColors();
+  const data = {
+    name,
+    active: document.getElementById('ann-active').checked,
+    pinned: document.getElementById('ann-pinned').checked,
+    style: document.getElementById('ann-style').value,
+    bg: shell.bg,
+    fg: shell.fg,
+    border: shell.border,
+    blocks: annBlocks.map(b => ({
+      id: b.id,
+      type: b.type,
+      text: b.text || '',
+      url: b.url || '',
+      color: b.color || '',
+      bg: b.bg || '',
+      size: String(b.size || ''),
+      align: b.align || 'left'
+    })),
+    updatedAt: serverTimestamp()
+  };
+  try {
+    if(editId){
+      await updateDoc(doc(db, 'announcements', editId), data);
+      showToast('ANNOUNCEMENT UPDATED');
+    } else {
+      data.createdAt = serverTimestamp();
+      await addDoc(collection(db, 'announcements'), data);
+      showToast('ANNOUNCEMENT PUBLISHED');
+    }
+    cancelAnnouncementEdit();
+    await loadAnnouncements();
+  } catch(e){
+    console.error(e);
+    showToast('ERROR SAVING — check Firestore rules');
+  }
+};
+
+/* ═══════════════════════════════════════════════
+   STORAGE STATS — Spark (Free) plan aware
+   Free tier: 1 GiB stored · 50k reads/day · 20k writes/day · 20k deletes/day · 10 GiB transfer/mo
+   ═══════════════════════════════════════════════ */
+const SPARK_STORED_LIMIT = 1 * 1024 * 1024 * 1024; // 1 GiB in bytes
+
+function formatBytes(n){
+  n = Number(n) || 0;
+  if(n < 1024) return n + ' B';
+  if(n < 1024 * 1024) return (n / 1024).toFixed(1) + ' KB';
+  if(n < 1024 * 1024 * 1024) return (n / (1024 * 1024)).toFixed(2) + ' MB';
+  return (n / (1024 * 1024 * 1024)).toFixed(3) + ' GiB';
+}
+
+function pctOfLimit(bytes, limit){
+  if(!limit) return 0;
+  return Math.min(100, Math.max(0, (bytes / limit) * 100));
+}
+
+function estimateDocSize(obj){
+  try { return new Blob([JSON.stringify(obj)]).size; } catch(_){ return JSON.stringify(obj||{}).length; }
+}
+
+window.loadStorageStats = async () => {
+  const tbody = document.getElementById('st-tbody');
+  if(tbody) tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text2);">Scanning collections…</td></tr>';
+
+  const collections = [
+    { name: 'matches', label: 'Matches' },
+    { name: 'registrations', label: 'Registrations' },
+    { name: 'announcements', label: 'Announcements' },
+    { name: 'slotCounts', label: 'Slot counts' },
+    { name: 'banners', label: 'Banners' },
+    { name: 'settings', label: 'Settings' },
+    { name: 'users', label: 'Users' }
+  ];
+
+  let totalDocs = 0;
+  let totalBytes = 0; // Firestore only (counts toward 1 GiB)
+  let imageUrls = new Set();
+  let uniqueUsers = new Set();
+  const rows = [];
+
+  for(const col of collections){
+    try {
+      const snap = await getDocs(collection(db, col.name));
+      let bytes = 0;
+      let count = 0;
+      snap.forEach(d => {
+        count++;
+        const data = d.data();
+        bytes += estimateDocSize({ id: d.id, ...data }) + 32;
+        ['image','bgImage','pageBackground','screenshotUrl'].forEach(k => {
+          if(data[k] && typeof data[k] === 'string' && data[k].startsWith('http')) imageUrls.add(data[k]);
+        });
+        if(Array.isArray(data.blocks)){
+          data.blocks.forEach(b => { if(b.url && String(b.url).startsWith('http')) imageUrls.add(b.url); });
+        }
+        if(col.name === 'registrations'){
+          if(data.teamName) uniqueUsers.add('team:' + String(data.teamName).toLowerCase().trim());
+          if(data.iglContact) uniqueUsers.add('igl:' + String(data.iglContact).toLowerCase().trim());
+          if(data.invId) uniqueUsers.add('inv:' + String(data.invId).toLowerCase().trim());
+        }
+        if(col.name === 'users'){
+          uniqueUsers.add('uid:' + d.id);
+        }
+      });
+      totalDocs += count;
+      totalBytes += bytes;
+      rows.push({ label: col.label, count, bytes });
+    } catch(e){
+      rows.push({ label: col.label + ' (no access)', count: 0, bytes: 0 });
+    }
+  }
+
+  // ImgBB images are external — NOT counted in Firestore 1 GiB
+  const otherBytes = imageUrls.size * 180 * 1024;
+
+  const usedPct = pctOfLimit(totalBytes, SPARK_STORED_LIMIT);
+  const usedPctRounded = usedPct < 0.01 && totalBytes > 0 ? '<0.01' : usedPct.toFixed(usedPct < 1 ? 3 : 2);
+
+  document.getElementById('st-users').textContent = uniqueUsers.size || '0';
+  document.getElementById('st-docs').textContent = totalDocs.toLocaleString();
+  document.getElementById('st-doc-bytes').textContent = formatBytes(totalBytes);
+  document.getElementById('st-other').textContent =
+    (imageUrls.size ? formatBytes(otherBytes) + ' · ' + imageUrls.size + ' imgs' : '0 B');
+  document.getElementById('st-total').textContent =
+    formatBytes(totalBytes) + ' / 1 GiB';
+
+  // Progress bar vs real free-tier 1 GiB limit (Firestore only)
+  const bar = document.getElementById('st-bar');
+  bar.style.width = Math.max(usedPct, totalBytes > 0 ? 0.5 : 0) + '%';
+  if(usedPct > 80) bar.style.background = 'linear-gradient(90deg,#ef4444,#f97316)';
+  else if(usedPct > 50) bar.style.background = 'linear-gradient(90deg,#f59e0b,#fbbf24)';
+  else bar.style.background = 'linear-gradient(90deg,var(--blue),#5b9bff)';
+
+  document.getElementById('st-detail').textContent =
+    `${usedPctRounded}% of free 1 GiB used · ${totalDocs} docs · ${uniqueUsers.size} users · ` +
+    `${imageUrls.size} ImgBB images (external, not in Firestore quota)`;
+
+  if(tbody){
+    tbody.innerHTML = rows.map(r => {
+      const p = pctOfLimit(r.bytes, SPARK_STORED_LIMIT);
+      const pTxt = p < 0.01 && r.bytes > 0 ? '<0.01%' : p.toFixed(p < 1 ? 3 : 2) + '%';
+      return `<tr><td>${r.label}</td><td>${r.count}</td><td>${formatBytes(r.bytes)}</td><td>${pTxt}</td></tr>`;
+    }).join('') +
+    `<tr><td>Images (ImgBB · external)</td><td>${imageUrls.size}</td><td>${formatBytes(otherBytes)}</td><td>—</td></tr>` +
+    `<tr><td>FIRESTORE TOTAL (counts to 1 GiB)</td><td>${totalDocs}</td><td>${formatBytes(totalBytes)}</td><td>${usedPctRounded}%</td></tr>`;
+  }
+};
+
+/* ═══════════════════════════════════════════════
+   FREE SLOT — settings + teams
+   Collection: freeSlotRegs
+   Settings doc: settings/freeSlot
+   ═══════════════════════════════════════════════ */
+let fsQuestions = []; // {id, text, options:[], correctIndex}
+let fsTeams = [];
+let currentFsId = null;
+
+function fsEsc(s){ return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+window.fsAddQuestion = () => {
+  fsQuestions.push({
+    id: 'q_' + Date.now() + '_' + Math.random().toString(36).slice(2,6),
+    text: '',
+    options: ['', '', '', ''],
+    correctIndex: 0
+  });
+  renderFsQuestions();
+};
+
+window.fsRemoveQuestion = (i) => {
+  fsQuestions.splice(i, 1);
+  renderFsQuestions();
+};
+
+window.fsUpdateQ = (i, key, val) => {
+  if(!fsQuestions[i]) return;
+  if(key === 'correctIndex') fsQuestions[i].correctIndex = parseInt(val, 10) || 0;
+  else if(key.startsWith('opt')){
+    const oi = parseInt(key.replace('opt',''), 10);
+    fsQuestions[i].options[oi] = val;
+  } else fsQuestions[i][key] = val;
+};
+
+function renderFsQuestions(){
+  const box = document.getElementById('fs-questions-list');
+  if(!box) return;
+  if(!fsQuestions.length){
+    box.innerHTML = '<div style="text-align:center;padding:16px;font-family:Orbitron,sans-serif;font-size:9px;color:var(--text2);letter-spacing:1px;border:1.5px dashed var(--border);border-radius:8px;">NO QUESTIONS — ADD AT LEAST ONE</div>';
+    return;
+  }
+  box.innerHTML = fsQuestions.map((q, i) => `
+    <div style="background:var(--gray);border:1.5px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-family:Orbitron,sans-serif;font-size:10px;font-weight:800;color:var(--blue);">Q${i+1}</span>
+        <button type="button" class="btn-red" onclick="fsRemoveQuestion(${i})">DEL</button>
+      </div>
+      <input type="text" class="finput" value="${fsEsc(q.text)}" placeholder="Question text" oninput="fsUpdateQ(${i},'text',this.value)" style="margin-bottom:8px;"/>
+      ${(q.options||[]).map((o, oi) => `
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
+          <label style="font-family:Orbitron,sans-serif;font-size:9px;font-weight:800;color:var(--text2);min-width:18px;">${String.fromCharCode(65+oi)}</label>
+          <input type="text" class="finput" value="${fsEsc(o)}" placeholder="Option ${String.fromCharCode(65+oi)}" oninput="fsUpdateQ(${i},'opt${oi}',this.value)" style="margin:0;flex:1;"/>
+          <label style="font-family:Orbitron,sans-serif;font-size:8px;font-weight:700;color:var(--text2);display:flex;align-items:center;gap:4px;white-space:nowrap;">
+            <input type="radio" name="fs-correct-${i}" ${q.correctIndex===oi?'checked':''} onchange="fsUpdateQ(${i},'correctIndex',${oi})"/> CORRECT
+          </label>
+        </div>
+      `).join('')}
+      <button type="button" class="btn-ghost" style="margin-top:6px;" onclick="fsQuestions[${i}].options.push('');renderFsQuestions();">+ OPTION</button>
+    </div>
+  `).join('');
+}
+
+window.loadFreeSlotSettings = async () => {
+  try {
+    const snap = await getDoc(doc(db, 'settings', 'freeSlot'));
+    const d = snap.exists() ? snap.data() : {};
+    document.getElementById('fs-enabled').checked = !!d.enabled;
+    document.getElementById('fs-max').value = d.maxTeams ?? 100;
+    document.getElementById('fs-select-limit').value = d.selectLimit ?? 30;
+    document.getElementById('fs-min-correct').value = d.minCorrect ?? 0;
+    document.getElementById('fs-badge').value = d.badge || 'FREE SLOT';
+    document.getElementById('fs-title').value = d.title || 'FREE SLOT|REGISTRATION';
+    document.getElementById('fs-subtitle').value = d.subtitle || '';
+    document.getElementById('fs-closed-msg').value = d.closedMessage || '';
+    if(d.openAt){
+      try {
+        const dt = new Date(d.openAt);
+        if(!isNaN(dt)) document.getElementById('fs-open-at').value = dt.toISOString().slice(0,16);
+      } catch(_){}
+    } else document.getElementById('fs-open-at').value = '';
+    fsQuestions = Array.isArray(d.questions) ? d.questions.map(q => ({
+      id: q.id || ('q_'+Math.random().toString(36).slice(2,8)),
+      text: q.text || '',
+      options: Array.isArray(q.options) ? q.options.slice() : ['','','',''],
+      correctIndex: typeof q.correctIndex === 'number' ? q.correctIndex : 0
+    })) : [];
+    renderFsQuestions();
+  } catch(e){ console.warn(e); showToast('ERROR LOADING FS SETTINGS'); }
+};
+
+window.saveFreeSlotSettings = async () => {
+  const openVal = document.getElementById('fs-open-at').value;
+  let openAt = null;
+  if(openVal){
+    const t = Date.parse(openVal);
+    if(Number.isFinite(t)) openAt = new Date(t).toISOString();
+  }
+  const cleanQ = fsQuestions
+    .map(q => ({
+      id: q.id,
+      text: (q.text||'').trim(),
+      options: (q.options||[]).map(o => String(o||'').trim()).filter(Boolean),
+      correctIndex: typeof q.correctIndex === 'number' ? q.correctIndex : 0
+    }))
+    .filter(q => q.text && q.options.length >= 2);
+
+  const data = {
+    enabled: document.getElementById('fs-enabled').checked,
+    maxTeams: parseInt(document.getElementById('fs-max').value, 10) || 100,
+    selectLimit: parseInt(document.getElementById('fs-select-limit').value, 10) || 30,
+    minCorrect: parseInt(document.getElementById('fs-min-correct').value, 10) || 0,
+    badge: document.getElementById('fs-badge').value.trim() || 'FREE SLOT',
+    title: document.getElementById('fs-title').value.trim() || 'FREE SLOT|REGISTRATION',
+    subtitle: document.getElementById('fs-subtitle').value.trim(),
+    closedMessage: document.getElementById('fs-closed-msg').value.trim(),
+    openAt,
+    questions: cleanQ,
+    updatedAt: serverTimestamp()
+  };
+  try {
+    await setDoc(doc(db, 'settings', 'freeSlot'), data, { merge: true });
+    showToast('FREE SLOT SETTINGS SAVED');
+  } catch(e){ console.error(e); showToast('ERROR SAVING'); }
+};
+
+window.loadFreeSlotTeams = async () => {
+  const list = document.getElementById('fs-teams-list');
+  if(list) list.innerHTML = '<div style="text-align:center;padding:20px;font-family:Orbitron,sans-serif;font-size:10px;color:var(--text2);">LOADING…</div>';
+  try {
+    let snap;
+    try {
+      snap = await getDocs(query(collection(db, 'freeSlotRegs'), orderBy('createdAt', 'desc')));
+    } catch(_) {
+      snap = await getDocs(collection(db, 'freeSlotRegs'));
+    }
+    fsTeams = [];
+    snap.forEach(d => fsTeams.push({ id: d.id, ...d.data() }));
+    fsTeams.sort((a,b) => {
+      const ta = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
+      const tb = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
+      return (tb||0)-(ta||0);
+    });
+    const total = fsTeams.length;
+    const verifying = fsTeams.filter(t => (t.status||'') === 'verifying').length;
+    const selected = fsTeams.filter(t => (t.status||'') === 'selected').length;
+    document.getElementById('fs-stat-total').textContent = total;
+    document.getElementById('fs-stat-verifying').textContent = verifying;
+    document.getElementById('fs-stat-selected').textContent = selected;
+    renderFreeSlotTeams();
+  } catch(e){
+    console.error(e);
+    if(list) list.innerHTML = '<div style="color:#cc0000;padding:20px;text-align:center;font-family:Orbitron,sans-serif;font-size:10px;">ERROR — check Firestore rules for freeSlotRegs</div>';
+  }
+};
+
+window.renderFreeSlotTeams = () => {
+  const list = document.getElementById('fs-teams-list');
+  if(!list) return;
+  const filter = document.getElementById('fs-status-filter')?.value || 'all';
+  let rows = fsTeams;
+  if(filter !== 'all') rows = fsTeams.filter(t => (t.status||'verifying') === filter);
+  if(!rows.length){
+    list.innerHTML = '<div style="text-align:center;padding:24px;font-family:Orbitron,sans-serif;font-size:10px;color:var(--text2);">NO TEAMS</div>';
+    return;
+  }
+  list.innerHTML = rows.map(t => {
+    const st = (t.status||'verifying').toLowerCase();
+    const badgeCls = st === 'selected' ? 'badge-green' : (st === 'rejected' ? 'badge-red' : 'badge-orange');
+    return `<div class="reg-row" onclick="openFsModal('${t.id}')" style="cursor:pointer;">
+      <div class="reg-top">
+        <div>
+          <div class="reg-team">${fsEsc(t.guildName||'—')}</div>
+          <div class="reg-id">${fsEsc(t.phone||'')} · ${fsEsc(t.email||'')}</div>
+        </div>
+        <span class="badge ${badgeCls}">${st.toUpperCase()}</span>
+      </div>
+      <div style="font-family:Orbitron,sans-serif;font-size:9px;color:var(--text2);letter-spacing:1px;">${fsEsc(t.name||'')}</div>
+    </div>`;
+  }).join('');
+};
+
+window.openFsModal = (id) => {
+  const t = fsTeams.find(x => x.id === id);
+  if(!t) return;
+  currentFsId = id;
+  const st = (t.status||'verifying').toLowerCase();
+  const body = document.getElementById('fs-modal-body');
+  body.innerHTML = `
+    <div style="margin-bottom:12px;">
+      <div style="font-family:Orbitron,sans-serif;font-size:14px;font-weight:800;">${fsEsc(t.guildName||'—')}</div>
+      <div style="font-family:Orbitron,sans-serif;font-size:9px;color:var(--text2);margin-top:4px;">${fsEsc(t.name||'')} · ${fsEsc(t.email||'')}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+      <div style="background:var(--gray);border-radius:8px;padding:10px;"><div style="font-size:8px;color:var(--text2);letter-spacing:1px;margin-bottom:3px;font-family:Orbitron,sans-serif;">PHONE</div><div style="font-family:Orbitron,sans-serif;font-size:12px;font-weight:700;">${fsEsc(t.phone||'—')}</div></div>
+      <div style="background:var(--gray);border-radius:8px;padding:10px;"><div style="font-size:8px;color:var(--text2);letter-spacing:1px;margin-bottom:3px;font-family:Orbitron,sans-serif;">STATUS</div><div style="font-family:Orbitron,sans-serif;font-size:12px;font-weight:700;">${st.toUpperCase()}</div></div>
+      <div style="background:var(--gray);border-radius:8px;padding:10px;"><div style="font-size:8px;color:var(--text2);letter-spacing:1px;margin-bottom:3px;font-family:Orbitron,sans-serif;">GUILD</div><div style="font-family:Orbitron,sans-serif;font-size:12px;font-weight:700;">${fsEsc(t.guildName||'—')}</div></div>
+      <div style="background:var(--gray);border-radius:8px;padding:10px;"><div style="font-size:8px;color:var(--text2);letter-spacing:1px;margin-bottom:3px;font-family:Orbitron,sans-serif;">USER ID</div><div style="font-family:Orbitron,sans-serif;font-size:10px;font-weight:700;word-break:break-all;">${fsEsc(t.userId||'—')}</div></div>
+    </div>`;
+  document.getElementById('fs-btn-select').style.display = st === 'verifying' ? 'inline-block' : 'none';
+  document.getElementById('fs-btn-reject').style.display = st === 'verifying' ? 'inline-block' : 'none';
+  document.getElementById('fs-modal').classList.add('open');
+};
+
+window.closeFsModal = () => {
+  document.getElementById('fs-modal').classList.remove('open');
+  currentFsId = null;
+};
+
+async function getFsSelectLimit(){
+  try {
+    const snap = await getDoc(doc(db, 'settings', 'freeSlot'));
+    if(snap.exists()) return parseInt(snap.data().selectLimit, 10) || 30;
+  } catch(_){}
+  return 30;
+}
+
+window.fsSelectTeam = async () => {
+  if(!currentFsId) return;
+  try {
+    const limit = await getFsSelectLimit();
+    const selectedCount = fsTeams.filter(t => t.status === 'selected').length;
+    if(selectedCount >= limit){
+      showToast('SELECT LIMIT REACHED ('+limit+')');
+      return;
+    }
+    await updateDoc(doc(db, 'freeSlotRegs', currentFsId), {
+      status: 'selected',
+      selectedAt: serverTimestamp()
+    });
+    showToast('TEAM SELECTED');
+    // if now at limit → auto-delete remaining verifying
+    const after = selectedCount + 1;
+    if(after >= limit){
+      await fsAutoDeleteRemaining();
+    }
+    closeFsModal();
+    await loadFreeSlotTeams();
+  } catch(e){ console.error(e); showToast('ERROR SELECTING'); }
+};
+
+window.fsRejectTeam = async () => {
+  if(!currentFsId) return;
+  try {
+    await updateDoc(doc(db, 'freeSlotRegs', currentFsId), { status: 'rejected' });
+    showToast('REJECTED');
+    closeFsModal();
+    await loadFreeSlotTeams();
+  } catch(e){ showToast('ERROR'); }
+};
+
+window.fsDeleteTeam = async () => {
+  if(!currentFsId) return;
+  if(!confirm('Delete this free-slot registration permanently?')) return;
+  try {
+    await deleteDoc(doc(db, 'freeSlotRegs', currentFsId));
+    showToast('DELETED');
+    closeFsModal();
+    await loadFreeSlotTeams();
+  } catch(e){ showToast('ERROR DELETING'); }
+};
+
+async function fsAutoDeleteRemaining(){
+  try {
+    const verifying = fsTeams.filter(t => (t.status||'') === 'verifying');
+    if(!verifying.length) return;
+    if(!confirm(`Select limit reached. Delete ${verifying.length} remaining verifying teams?`)) return;
+    for(const t of verifying){
+      try { await deleteDoc(doc(db, 'freeSlotRegs', t.id)); } catch(_){}
+    }
+    showToast('REMAINING TEAMS DELETED');
+  } catch(e){ console.error(e); }
+}
+</script>
+</body>
+</html>
